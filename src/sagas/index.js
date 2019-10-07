@@ -1,6 +1,8 @@
 import { fork, all } from 'redux-saga/effects';
+import state from './state';
 
 const sagas = [
+  state,
 ];
 
 function* globalSagas() {

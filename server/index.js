@@ -8,7 +8,8 @@ const cors = require('cors');
 const expressEnforcesSsl = require('express-enforces-ssl');
 
 // routes
-const yieldsRoute = require('./routes/yields');
+const countyRoute = require('./routes/county');
+const stateRoute = require('./routes/state');
 
 // create server
 const app = express();
@@ -41,7 +42,8 @@ if (process.env.NODE_ENV !== 'development') {
 app.use(bodyParser.json({ limit: '2mb' }));
 
 // routes
-app.use('/api/yields', cors(corsOptions), yieldsRoute);
+app.use('/api/county', cors(corsOptions), countyRoute);
+app.use('/api/state', cors(corsOptions), stateRoute);
 
 // set the app listening
 app.listen(PORT, () => {

@@ -16,7 +16,7 @@ exports.up = async (knex) => {
     table.text('state_code');
     table.text('state_name');
     table.bigInteger('land_area');
-    table.specificType('polygon', 'geometry(MULTIPOLYGON, 4326)');
+    table.specificType('geometry', 'geometry(MULTIPOLYGON, 4326)');
   });
 
   await knex.schema.createTable('county_yields', (table) => {
@@ -34,7 +34,7 @@ exports.up = async (knex) => {
     table.increments('id').primary();
     table.text('county_fips');
     table.bigInteger('land_area');
-    table.specificType('polygon', 'geometry(MULTIPOLYGON, 4326)');
+    table.specificType('geometry', 'geometry(MULTIPOLYGON, 4326)');
   });
 };
 

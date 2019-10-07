@@ -4,9 +4,9 @@ const { db } = require('../config/dbConnection');
 const router = express.Router();
 
 // get all states
-router.get('/states', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const { state_code, year } = req.query;
+    const { state_code, crop, year } = req.query;
     const results = await db
       .with('results', db.raw(`
         SELECT row_to_json(fc)
@@ -24,8 +24,8 @@ router.get('/states', async (req, res) => {
                   SELECT crop, state_code, year, total_harvested_acres, total_yield
                 ) t
               ) AS "properties"
-            FROM state_yields
-            WHERE year=${year}${state_code ? ` AND state_code='${state_code}'` : ''}
+            FROM crop_yields
+            WHERE year=${year} AND state_code = ${state_code} AND crop = ${crop}
           ) AS f
         ) AS fc
       `))
