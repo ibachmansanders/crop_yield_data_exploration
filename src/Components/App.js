@@ -2,7 +2,6 @@ import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import { Route } from 'react-router-dom';
 
 import Map from './Map';
 
@@ -26,7 +25,7 @@ const App = () => (
   <>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      <Route path="/" component={Map} />
+      <Map />
     </ThemeProvider>
   </>
 );

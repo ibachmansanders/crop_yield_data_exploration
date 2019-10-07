@@ -19,3 +19,7 @@ Insert states to local DB: `ogr2ogr -f "PostgreSQL" PG:"dbname=crop_yields user=
 Instert counties to local DB: `ogr2ogr -f "PostgreSQL" PG:"dbname=crop_yields user=postgres" "db\data\state_geometry.geojson" -nln county_geometry -append`
 
 Connection parameters will have to be adjusted depending on which environment you're writing to - this is for a local database.
+
+## Planned Features
+
+Routing and URL query parameters via `react-router-dom`
