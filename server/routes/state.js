@@ -31,6 +31,7 @@ router.get('/', async (req, res) => {
             FROM state_geometry
             INNER JOIN state_yields ON state_yields.state_code = state_geometry.state_code
             WHERE state_yields.crop = :crop AND state_yields.year= :year
+            ORDER BY state_geometry.state_name
           ) AS f
         ) AS fc
       `, { crop, year }))

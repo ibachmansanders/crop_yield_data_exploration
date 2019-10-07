@@ -1,6 +1,6 @@
 import { takeLatest, put, select } from 'redux-saga/effects';
 import qs from 'querystring';
-import { getMap, getParams } from '../reducers/map';
+import { getMap, getParams, updateGraphData } from '../reducers/map';
 import { getStates, getStateQuantiles, fetchStatesError, fetchStatesSuccess, FETCH_STATES } from '../reducers/state';
 
 import mapData from '../utils/mapData';
@@ -33,9 +33,19 @@ function* fetchStatesSaga() {
       return;
     }
 
+    // create harvestData and yieldData arrays
+    const harvestData = [];
+    const yieldData = [];
+    data.features.forEach((feature) => {
+      const { state_code, total_harvested_acres, total_yield } = feature.properties;
+      harvestData.push({ id: state_code, name: state_code, total_harvested_acres });
+      yieldData.push({ id: state_code, name: state_code, total_yield });
+    });
+
     // store the geoJSON and data
     yield put(fetchStatesSuccess({ data, quantiles }));
-    console.log(map, data, vis, quantiles);
+    yield put(updateGraphData({ harvestData, yieldData }));
+
     // add the data to the map
     mapData(map, data, vis, quantiles);
   } catch (error) {

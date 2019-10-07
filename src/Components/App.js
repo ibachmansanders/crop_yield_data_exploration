@@ -2,14 +2,16 @@ import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
 
 import Map from './Map';
+import Graphs from './Graphs';
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#83B87F',
-      contrastText: '#000',
+      main: '#4F834D',
+      contrastText: '#FFF',
     }, // #ff4d00
     secondary: {
       main: '#0084A7',
@@ -25,7 +27,14 @@ const App = () => (
   <>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      <Map />
+      <Grid container spacing={0}>
+        <Grid item xs={12} sm={7}>
+          <Map />
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <Graphs />
+        </Grid>
+      </Grid>
     </ThemeProvider>
   </>
 );

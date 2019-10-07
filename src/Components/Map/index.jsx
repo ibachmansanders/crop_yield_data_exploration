@@ -11,12 +11,12 @@ import config from '../../config';
 
 const styles = (theme) => ({
   root: {
-    maxWidth: '100vw',
+    maxWidth: '100%',
     overflowX: 'hidden',
   },
   map: {
     height: '100vh',
-    width: '100vw',
+    width: '100%',
   },
 });
 

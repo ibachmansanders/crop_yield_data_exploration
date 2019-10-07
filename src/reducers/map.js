@@ -1,9 +1,7 @@
 // action types
 export const SET_MAP = 'SET_MAP';
 export const SET_INFOWINDOW = 'SET_INFOWINDOW';
-export const FETCH_STATES = 'FETCH_STATES';
-export const FETCH_STATES_SUCCESS = 'FETCH_STATES_SUCCESS';
-export const FETCH_STATES_ERROR = 'FETCH_STATES_ERROR';
+export const UPDATE_GRAPH_DATA = 'UPDATE_GRAPH_DATA';
 
 // initial state
 const initialState = {
@@ -13,11 +11,14 @@ const initialState = {
   crop: 'CORN',
   year: 2018,
   vis: 'total_yield',
+  harvestData: [{ name: '', total_harvested_acres: 0 }],
+  yieldData: [{ name: '', total_yield: 0 }],
 };
 
 // action creators
 export const setMap = (payload) => ({ type: SET_MAP, payload });
 export const setInfoWindow = (payload) => ({ type: SET_INFOWINDOW, payload });
+export const updateGraphData = (payload) => ({ type: UPDATE_GRAPH_DATA, payload });
 
 // selectors
 export const getMap = (state) => state.map.map;
@@ -31,6 +32,8 @@ export default (state = initialState, { type, payload }) => {
       return { ...state, map: payload };
     case SET_INFOWINDOW:
       return { ...state, infoWindow: payload };
+    case UPDATE_GRAPH_DATA:
+      return { ...state, ...payload };
     default:
       return state;
   }

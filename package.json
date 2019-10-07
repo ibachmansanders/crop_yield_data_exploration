@@ -19,7 +19,8 @@
     "pg": "^7.12.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "victory": "^33.1.0"
   },
   "scripts": {
     "watch": "react-scripts start",
