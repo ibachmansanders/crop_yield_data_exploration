@@ -15,13 +15,13 @@ exports.up = async (knex) => {
     table.text('state_fips');
     table.text('state_code');
     table.text('state_name');
-    table.integer('land_area');
+    table.bigInteger('land_area');
     table.specificType('polygon', 'geometry(MULTIPOLYGON, 4326)');
   });
 
   await knex.schema.createTable('county_yields', (table) => {
     table.increments('id').primary();
-    table.text('state_fips');
+    table.text('state_code');
     table.text('county_fips');
     table.text('county_name');
     table.text('crop');
@@ -33,12 +33,14 @@ exports.up = async (knex) => {
   await knex.schema.createTable('county_geometry', (table) => {
     table.increments('id').primary();
     table.text('county_fips');
-    table.integer('land_area');
+    table.bigInteger('land_area');
     table.specificType('polygon', 'geometry(MULTIPOLYGON, 4326)');
   });
 };
 
 exports.down = async (knex) => {
-  await knex.schema.dropTableIfExists('sate_yields');
+  await knex.schema.dropTableIfExists('state_yields');
+  await knex.schema.dropTableIfExists('state_geometry');
   await knex.schema.dropTableIfExists('county_yields');
+  await knex.schema.dropTableIfExists('county_geometry');
 };

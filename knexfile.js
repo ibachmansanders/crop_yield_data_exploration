@@ -3,7 +3,7 @@ require('dotenv').config();
 
 // some shared db config
 const dbSetup = {
-  // use null for empty strings or missing values
+  // use null instead of default for undefined
   useNullAsDefault: true,
   // location db migration files to set up database, seed files to seed database
   migrations: {
