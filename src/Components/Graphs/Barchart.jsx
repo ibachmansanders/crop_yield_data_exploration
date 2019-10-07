@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { VictoryChart, VictoryTooltip, VictoryAxis, VictoryBar } from 'victory';
 
 const Barchart = ({ data, x, y }) => {
@@ -7,7 +8,12 @@ const Barchart = ({ data, x, y }) => {
   const mouseInFunc = (id) => console.log('mouseIn: ', id);
   const mouseOuteFunc = (id) => console.log('mouseOut: ', id);
   return (
-    <VictoryChart height={window.innerHeight * 0.25} padding={{ top: 0, bottom: 0, left: 50, right: 12 }} domainPadding={8} animate={{ duration: 500 }}>
+    <VictoryChart
+      height={window.innerHeight * 0.15}
+      padding={{ top: 0, bottom: 0, left: 50, right: 12 }}
+      domainPadding={8}
+      animate={{ duration: 500 }}
+    >
       <VictoryAxis
         dependentAxis
         tickFormat={(x) => (`${x * 0.001}k`)}
@@ -18,11 +24,16 @@ const Barchart = ({ data, x, y }) => {
       <VictoryBar
         data={data.length ? data : null}
         labels={({ datum }) => `${datum.name} - ${datum[y].toLocaleString()}`}
-        labelComponent={<VictoryTooltip style={{ fontSize: 10, fill: 'white' }} flyoutStyle={{ fill: '#4F834D', stroke: '#FFFFFF', strokeWidth: 1 }} />}
+        labelComponent={<VictoryTooltip style={{ fontSize: 10, fill: 'white' }} flyoutStyle={{ fill: '#006d2c', stroke: '#FFFFFF', strokeWidth: 1 }} />}
         x={x}
         y={y}
         barWidth={10}
-        style={{ data: { fill: '#4F834D' } }}
+        style={{
+          data: {
+            fill: '#006d2c',
+            stroke: '#006d2c',
+          },
+        }}
         events={[
           {
             target: 'data',
@@ -68,4 +79,8 @@ const Barchart = ({ data, x, y }) => {
   );
 };
 
-export default Barchart;
+const mapStateToProps = (state) => ({});
+
+const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Barchart);

@@ -5,10 +5,10 @@ import Typography from '@material-ui/core/Typography';
 import Barchart from './Barchart';
 
 const HarvestedAcres = ({ harvestData }) => (
-  <div>
+  <>
     <Typography align="center" variant="h6">Total Harvested Acres</Typography>
     <Barchart data={harvestData} x="name" y="total_harvested_acres" />
-  </div>
+  </>
 );
 
 const mapStateToProps = (state) => ({

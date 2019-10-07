@@ -6,7 +6,7 @@ export const FETCH_STATES_ERROR = 'FETCH_STATES_ERROR';
 // initial state
 const initialState = {
   states: null,
-  quantiles: [],
+  quantiles: {},
   state: null,
   loading: false,
   error: null,
@@ -25,11 +25,11 @@ export const getStateQuantiles = (state) => state.map.quantiles;
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case FETCH_STATES:
-      return { ...state, states: null, quantiles: null, loading: true, error: null };
+      return { ...state, states: null, quantiles: {}, loading: true, error: null };
     case FETCH_STATES_SUCCESS:
       return { ...state, states: payload.data, quantiles: payload.quantiles, loading: false, error: null };
     case FETCH_STATES_ERROR:
-      return { ...state, states: null, quantiles: null, loading: false, error: payload };
+      return { ...state, states: null, quantiles: {}, loading: false, error: payload };
     default:
       return state;
   }
