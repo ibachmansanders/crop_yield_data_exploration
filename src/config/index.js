@@ -4,6 +4,7 @@ export default {
     center: { lat: 38, lng: -98.58 },
     zoom: 4,
     controlSize: 24,
+    streetViewControl: false,
     // courtesy of https://snazzymaps.com/style/151/ultra-light-with-labels
     styles: [
       {
