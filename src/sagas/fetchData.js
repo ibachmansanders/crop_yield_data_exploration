@@ -24,11 +24,13 @@ function* fetchStatesSaga() {
     // create harvestData and yieldData arrays
     const harvestData = [];
     const yieldData = [];
-    data.features.forEach((feature) => {
-      const { state_code, total_harvested_acres, total_yield } = feature.properties;
-      harvestData.push({ id: state_code, name: state_code, total_harvested_acres });
-      yieldData.push({ id: state_code, name: state_code, total_yield });
-    });
+    if (data.features && data.features.length) {
+      data.features.forEach((feature) => {
+        const { state_code, total_harvested_acres, total_yield } = feature.properties;
+        harvestData.push({ id: state_code, name: state_code, total_harvested_acres });
+        yieldData.push({ id: state_code, name: state_code, total_yield });
+      });
+    }
 
     // store the geoJSON and data
     yield put(fetchStatesSuccess({ data, quantiles }));

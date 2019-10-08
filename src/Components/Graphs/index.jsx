@@ -14,8 +14,6 @@ const styles = makeStyles((theme) => ({
     width: '100%',
     maxHeight: '100vh',
     overflowY: 'auto',
-    display: 'flex',
-    flexWrap: 'wrap',
   },
   divider: {
     width: '100%',

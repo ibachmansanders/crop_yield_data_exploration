@@ -7,7 +7,11 @@ import Barchart from './Barchart';
 const HarvestedAcres = ({ harvestData }) => (
   <>
     <Typography align="center" variant="h6">Total Harvested Acres</Typography>
-    <Barchart data={harvestData} x="name" y="total_harvested_acres" />
+    {harvestData.length ? (
+      <Barchart data={harvestData} x="name" y="total_harvested_acres" />
+    ) : (
+      <Typography align="center">No data available.</Typography>
+    )}
   </>
 );
 

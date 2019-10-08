@@ -7,7 +7,11 @@ import Barchart from './Barchart';
 const TotalYield = ({ yieldData }) => (
   <>
     <Typography align="center" variant="h6">Total Yield, Bushels / Acre</Typography>
-    <Barchart data={yieldData} x="name" y="total_yield" />
+    {yieldData.length ? (
+      <Barchart data={yieldData} x="name" y="total_yield" />
+    ) : (
+      <Typography align="center">Try a different crop or year.</Typography>
+    )}
   </>
 );
 
