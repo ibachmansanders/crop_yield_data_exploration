@@ -8,6 +8,7 @@ const Year = ({ year, updateParam }) => (
   <>
     <Typography gutterBottom>Select Year</Typography>
     <Slider
+      color="secondary"
       defaultValue={2018}
       step={1}
       min={2014}

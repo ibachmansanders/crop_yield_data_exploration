@@ -13,27 +13,27 @@ const Crop = ({ crop, updateParam }) => (
     <RadioGroup value={crop} onChange={(event, crop) => updateParam({ crop })} row>
       <FormControlLabel
         value="CORN"
-        control={<Radio color="primary" />}
+        control={<Radio color="secondary" />}
         label="Corn"
       />
       <FormControlLabel
         value="COTTON"
-        control={<Radio color="primary" />}
+        control={<Radio color="secondary" />}
         label="Cotton"
       />
       <FormControlLabel
         value="RICE"
-        control={<Radio color="primary" />}
+        control={<Radio color="secondary" />}
         label="Rice"
       />
       <FormControlLabel
         value="SOYBEANS"
-        control={<Radio color="primary" />}
+        control={<Radio color="secondary" />}
         label="Soybeans"
       />
       <FormControlLabel
         value="WHEAT"
-        control={<Radio color="primary" />}
+        control={<Radio color="secondary" />}
         label="Wheat"
       />
     </RadioGroup>
