@@ -2,15 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { VictoryChart, VictoryTooltip, VictoryAxis, VictoryBar } from 'victory';
 
-const Barchart = ({ data, x, y }) => {
+import getColor from '../../utils/getColor';
+
+const Barchart = ({ data, x, y, quantiles }) => {
   // TODO: pass click event to map to select state
   const clickFunc = (id) => console.log('clicked: ', id);
   const mouseInFunc = (id) => console.log('mouseIn: ', id);
   const mouseOuteFunc = (id) => console.log('mouseOut: ', id);
+  let barWidth = 10;
+  if (document.getElementById('crop-graphs')) barWidth = (document.getElementById('crop-graphs').clientWidth - 200) / data.length;
   return (
     <VictoryChart
       height={window.innerHeight * 0.15}
-      padding={{ top: 0, bottom: 0, left: 50, right: 12 }}
+      padding={{ top: 15, bottom: 0, left: 50, right: 60 }}
       domainPadding={8}
       animate={{ duration: 500 }}
     >
@@ -27,11 +31,14 @@ const Barchart = ({ data, x, y }) => {
         labelComponent={<VictoryTooltip style={{ fontSize: 10, fill: 'white' }} flyoutStyle={{ fill: '#006d2c', stroke: '#FFFFFF', strokeWidth: 1 }} />}
         x={x}
         y={y}
-        barWidth={10}
+        sortKey="y"
+        sortOrder="descending"
+        barWidth={barWidth}
+        alignment="start"
         style={{
           data: {
-            fill: '#006d2c',
-            stroke: '#006d2c',
+            fill: ({ datum }) => getColor(datum._y, quantiles),
+            stroke: '#fff',
           },
         }}
         events={[
@@ -79,7 +86,9 @@ const Barchart = ({ data, x, y }) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  quantiles: state.data.quantiles,
+});
 
 const mapDispatchToProps = (dispatch) => ({});
 
