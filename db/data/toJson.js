@@ -44,7 +44,12 @@ Papa.parse(records, {
     }
   },
   complete: async () => {
-    stateYields = Object.values(stateYields);
+    stateYields = Object.values(stateYields).map((state) => {
+      // check whether there is missing data, and  null it if necessary
+      if (state.total_harvested_acres === 0) delete state.total_harvested_acres;
+      if (state.total_yield === 0) delete state.total_yield;
+      return state;
+    });
     // write data to file
     fs.writeFileSync(`${__dirname}/stateYields.json`, JSON.stringify(stateYields));
     fs.writeFileSync(`${__dirname}/countyYields.json`, JSON.stringify(countyYields));

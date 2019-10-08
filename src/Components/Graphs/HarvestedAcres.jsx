@@ -10,7 +10,7 @@ const HarvestedAcres = ({ harvestData }) => (
     {harvestData.length ? (
       <Barchart data={harvestData} x="name" y="total_harvested_acres" />
     ) : (
-      <Typography align="center">No data available.</Typography>
+      <Typography align="center">No harvest data available.</Typography>
     )}
   </>
 );

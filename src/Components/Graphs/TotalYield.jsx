@@ -10,7 +10,7 @@ const TotalYield = ({ yieldData }) => (
     {yieldData.length ? (
       <Barchart data={yieldData} x="name" y="total_yield" />
     ) : (
-      <Typography align="center">Try a different crop or year.</Typography>
+      <Typography align="center">No yield data available.</Typography>
     )}
   </>
 );

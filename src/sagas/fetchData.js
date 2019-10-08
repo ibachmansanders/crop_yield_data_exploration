@@ -27,8 +27,8 @@ function* fetchStatesSaga() {
     if (data.features && data.features.length) {
       data.features.forEach((feature) => {
         const { state_code, total_harvested_acres, total_yield } = feature.properties;
-        harvestData.push({ id: state_code, name: state_code, total_harvested_acres });
-        yieldData.push({ id: state_code, name: state_code, total_yield });
+        if (total_harvested_acres) harvestData.push({ id: state_code, name: state_code, total_harvested_acres });
+        if (total_yield) yieldData.push({ id: state_code, name: state_code, total_yield });
       });
     }
 
@@ -36,8 +36,10 @@ function* fetchStatesSaga() {
     yield put(fetchStatesSuccess({ data, quantiles }));
     yield put(updateGraphData({ harvestData, yieldData }));
 
-    // add the data to the map
-    mapData(map, data, vis, quantiles);
+    if (data.features && data.features.length) {
+      // add the data to the map
+      mapData(map, data, vis, quantiles);
+    }
   } catch (error) {
     console.warn('There was an error fetching the state yields data: ', error);
     yield put(fetchStatesError(error));
