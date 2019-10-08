@@ -1,6 +1,7 @@
 // action types
 export const SET_MAP = 'SET_MAP';
 export const SET_INFOWINDOW = 'SET_INFOWINDOW';
+export const UPDATE_PARAM = 'UPDATE_PARAM';
 export const UPDATE_GRAPH_DATA = 'UPDATE_GRAPH_DATA';
 
 // initial state
@@ -18,6 +19,7 @@ const initialState = {
 // action creators
 export const setMap = (payload) => ({ type: SET_MAP, payload });
 export const setInfoWindow = (payload) => ({ type: SET_INFOWINDOW, payload });
+export const updateParam = (payload) => ({ type: UPDATE_PARAM, payload });
 export const updateGraphData = (payload) => ({ type: UPDATE_GRAPH_DATA, payload });
 
 // selectors
@@ -32,6 +34,7 @@ export default (state = initialState, { type, payload }) => {
       return { ...state, map: payload };
     case SET_INFOWINDOW:
       return { ...state, infoWindow: payload };
+    case UPDATE_PARAM:
     case UPDATE_GRAPH_DATA:
       return { ...state, ...payload };
     default:

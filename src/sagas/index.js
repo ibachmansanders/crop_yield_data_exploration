@@ -1,8 +1,8 @@
 import { fork, all } from 'redux-saga/effects';
-import state from './state';
+import fetchData from './fetchData';
 
 const sagas = [
-  state,
+  fetchData,
 ];
 
 function* globalSagas() {
