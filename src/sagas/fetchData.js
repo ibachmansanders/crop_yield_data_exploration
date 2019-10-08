@@ -1,11 +1,11 @@
 import { takeLatest, put, select } from 'redux-saga/effects';
 import qs from 'querystring';
 import { UPDATE_PARAM, getMap, getParams, updateGraphData } from '../reducers/map';
-import { fetchStatesError, fetchStatesSuccess, FETCH_STATES } from '../reducers/state';
+import { fetchDataError, fetchDataSuccess, FETCH_DATA } from '../reducers/data';
 
 import mapData from '../utils/mapData';
 
-function* fetchStatesSaga() {
+function* fetchDataSaga() {
   try {
     const map = yield select(getMap);
     const { crop, year, vis } = yield select(getParams);
@@ -14,10 +14,10 @@ function* fetchStatesSaga() {
     map.data.forEach((feature) => map.data.remove(feature));
 
     // if viewing state the app needs new data, load it
-    const { data, quantiles, error } = yield fetch(`/api/state?${qs.stringify({ crop, year })}`).then((data) => data.json());
+    const { data, quantiles, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year })}`).then((data) => data.json());
     if (error) {
       console.warn('There was an error in the server fetching the state yields: ', error);
-      yield put(fetchStatesError(error));
+      yield put(fetchDataError(error));
       return;
     }
 
@@ -33,7 +33,7 @@ function* fetchStatesSaga() {
     }
 
     // store the geoJSON and data
-    yield put(fetchStatesSuccess({ data, quantiles }));
+    yield put(fetchDataSuccess({ data, quantiles }));
     yield put(updateGraphData({ harvestData, yieldData }));
 
     if (data.features && data.features.length) {
@@ -42,11 +42,11 @@ function* fetchStatesSaga() {
     }
   } catch (error) {
     console.warn('There was an error fetching the state yields data: ', error);
-    yield put(fetchStatesError(error));
+    yield put(fetchDataError(error));
   }
 }
 
 export default function* projectsListener() {
-  yield takeLatest(FETCH_STATES, fetchStatesSaga);
-  yield takeLatest(UPDATE_PARAM, fetchStatesSaga);
+  yield takeLatest(FETCH_DATA, fetchDataSaga);
+  yield takeLatest(UPDATE_PARAM, fetchDataSaga);
 }

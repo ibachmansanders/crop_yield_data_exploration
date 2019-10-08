@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
 
 import { setMap, setInfoWindow } from '../../reducers/map';
-import { fetchStates } from '../../reducers/state';
+import { fetchData } from '../../reducers/data';
 
 import loadScript from '../../utils/loadScript';
 import config from '../../config';
@@ -29,7 +29,7 @@ class Map extends React.Component {
 
   initMap = () => {
     const { mapOptions } = config;
-    const { setMap, setInfoWindow, fetchStates } = this.props;
+    const { setMap, setInfoWindow, fetchData } = this.props;
     // create the map, and save it to the store
     const map = new google.maps.Map(document.getElementById('map'), mapOptions);
     map.toJSON = () => '<Map>';
@@ -39,7 +39,7 @@ class Map extends React.Component {
     infoWindow.toJSON = () => '<InfoWindow>';
     setInfoWindow(infoWindow);
     // load state data
-    fetchStates();
+    fetchData();
   }
 
   render() {
@@ -55,7 +55,7 @@ class Map extends React.Component {
 const mapDispatchToProps = (dispatch) => ({
   setMap: (map) => dispatch(setMap(map)),
   setInfoWindow: (infoWindow) => dispatch(setInfoWindow(infoWindow)),
-  fetchStates: () => dispatch(fetchStates()),
+  fetchData: () => dispatch(fetchData()),
 });
 
 export default withStyles(styles)(connect(null, mapDispatchToProps)(Map));

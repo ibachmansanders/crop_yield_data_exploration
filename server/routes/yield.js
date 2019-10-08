@@ -3,12 +3,30 @@ const { db } = require('../config/dbConnection');
 
 const router = express.Router();
 
-// get all states
+// request yield and geometry data
 router.get('/', async (req, res) => {
   try {
-    const { crop, year } = req.query;
-    console.log('fetch states: ', req.query);
-    // get the states data and geometry
+    const { crop, year, state_code } = req.query;
+    console.log('fetch yields: ', req.query);
+
+    // adjust query depending on whether you're loading states or counties
+    let innerSelect = `
+      state_geometry.region, state_geometry.state_code, state_geometry.state_name, state_geometry.land_area,
+      state_yields.total_harvested_acres, state_yields.total_yield
+    `;
+    let table = 'state';
+    let join = 'state_yields ON state_yields.state_code = state_geometry.state_code';
+    let order = 'state_yields.state_code';
+    if (state_code) {
+      innerSelect = `
+        county_geometry.region, county_geometry.state_code, county_geometry.county_name, county_geometry.land_area,
+        county_yields.total_harvested_acres, county_yields.total_yield
+      `;
+      table = 'county';
+      join = 'county_yields ON county_yields.county_fips = county_geometry.county_fips';
+      order = 'county_yields.county_name';
+    }
+    // get the data and geometry
     const results = await db
       .with('results', db.raw(`
         SELECT row_to_json(fc)
@@ -24,14 +42,13 @@ router.get('/', async (req, res) => {
                 SELECT json_strip_nulls(row_to_json(t))
                 FROM (
                   SELECT
-                    state_geometry.region, state_geometry.state_code, state_geometry.state_name, state_geometry.land_area,
-                    state_yields.total_harvested_acres, state_yields.total_yield
+                    ${innerSelect}
                 ) t
               ) AS "properties"
-            FROM state_geometry
-            INNER JOIN state_yields ON state_yields.state_code = state_geometry.state_code
-            WHERE state_yields.crop = :crop AND state_yields.year= :year
-            ORDER BY state_geometry.state_name
+            FROM ${table}_geometry
+            INNER JOIN ${join}
+            WHERE ${table}_yields.crop = :crop AND ${table}_yields.year= :year
+            ORDER BY ${order}
           ) AS f
         ) AS fc
       `, { crop, year }))
@@ -40,7 +57,7 @@ router.get('/', async (req, res) => {
       .catch((error) => console.log('There was a database error getting state yields: ', error));
 
     // get state quantiles
-    const [quantiles] = await db('state_yields')
+    const [quantiles] = await db(`${table}_yields`)
       .select([
         db.raw('percentile_disc(0) WITHIN GROUP (ORDER BY state_yields.total_yield) AS bin1'),
         db.raw('percentile_disc(0.2) WITHIN GROUP (ORDER BY state_yields.total_yield) AS bin2'),
@@ -57,7 +74,7 @@ router.get('/', async (req, res) => {
       res.status(500).json({ error: 'Faulty database query' });
     }
   } catch (error) {
-    console.error('There was a server error getting state yields: ', error);
+    console.error('There was a server error getting yields: ', error);
     res.status(500).json({ error });
   }
 });
