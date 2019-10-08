@@ -9,6 +9,8 @@ import { fetchData } from '../../reducers/data';
 import loadScript from '../../utils/loadScript';
 import config from '../../config';
 
+import Vis from './Vis';
+
 const styles = (theme) => ({
   root: {
     maxWidth: '100%',
@@ -46,6 +48,7 @@ class Map extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
+        <Vis />
         <div className={classes.map} id="map" />
       </div>
     );

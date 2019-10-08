@@ -6,7 +6,7 @@ const router = express.Router();
 // request yield and geometry data
 router.get('/', async (req, res) => {
   try {
-    const { crop, year, state_code } = req.query;
+    const { crop, year, vis, state_code } = req.query;
     console.log('fetch yields: ', req.query);
 
     // adjust query depending on whether you're loading states or counties
@@ -17,6 +17,9 @@ router.get('/', async (req, res) => {
     let table = 'state';
     let join = 'state_yields ON state_yields.state_code = state_geometry.state_code';
     let order = 'state_yields.state_code';
+    let _vis;
+    if (vis === 'total_harvested_acres') _vis = 'total_harvested_acres';
+    if (vis === 'total_yield') _vis = 'total_yield';
     if (state_code) {
       innerSelect = `
         county_geometry.region, county_geometry.state_code, county_geometry.county_name, county_geometry.land_area,
@@ -59,11 +62,11 @@ router.get('/', async (req, res) => {
     // get state quantiles
     const [quantiles] = await db(`${table}_yields`)
       .select([
-        db.raw('percentile_disc(0) WITHIN GROUP (ORDER BY state_yields.total_yield) AS bin1'),
-        db.raw('percentile_disc(0.2) WITHIN GROUP (ORDER BY state_yields.total_yield) AS bin2'),
-        db.raw('percentile_disc(0.4) WITHIN GROUP (ORDER BY state_yields.total_yield) AS bin3'),
-        db.raw('percentile_disc(0.6) WITHIN GROUP (ORDER BY state_yields.total_yield) AS bin4'),
-        db.raw('percentile_disc(0.8) WITHIN GROUP (ORDER BY state_yields.total_yield) AS bin5'),
+        db.raw(`percentile_disc(0) WITHIN GROUP (ORDER BY ${table}_yields.total_yield) AS bin1`),
+        db.raw(`percentile_disc(0.2) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin2`),
+        db.raw(`percentile_disc(0.4) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin3`),
+        db.raw(`percentile_disc(0.6) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin4`),
+        db.raw(`percentile_disc(0.8) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin5`),
       ])
       .where({ crop, year })
       .catch((error) => console.log('There was an error getting quantiles: ', error));

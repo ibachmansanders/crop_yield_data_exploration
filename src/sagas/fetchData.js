@@ -14,7 +14,7 @@ function* fetchDataSaga() {
     map.data.forEach((feature) => map.data.remove(feature));
 
     // if viewing state the app needs new data, load it
-    const { data, quantiles, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year })}`).then((data) => data.json());
+    const { data, quantiles, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year, vis })}`).then((data) => data.json());
     if (error) {
       console.warn('There was an error in the server fetching the state yields: ', error);
       yield put(fetchDataError(error));
