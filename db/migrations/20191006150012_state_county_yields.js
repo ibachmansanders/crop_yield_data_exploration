@@ -7,6 +7,7 @@ exports.up = async (knex) => {
     table.integer('year');
     table.integer('total_harvested_acres');
     table.decimal('total_yield');
+    table.bigInteger('total_production');
   });
 
   await knex.schema.createTable('state_geometry', (table) => {
@@ -28,6 +29,7 @@ exports.up = async (knex) => {
     table.integer('year');
     table.integer('total_harvested_acres');
     table.decimal('total_yield');
+    table.bigInteger('total_production');
   });
 
   await knex.schema.createTable('county_geometry', (table) => {

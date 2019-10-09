@@ -7,7 +7,6 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const { crop, year, vis, scope } = req.query;
-    console.log('fetch yields: ', req.query);
 
     // adjust query depending on whether you're loading states or counties
     // loading states
