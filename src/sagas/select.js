@@ -1,7 +1,7 @@
-import { takeLatest, put, select } from 'redux-saga/effects';
+import { takeLatest, put, select, all } from 'redux-saga/effects';
 import qs from 'querystring';
-import { getParams, getCountyLayer, getStateLayer } from '../reducers/map';
-import { UPDATE_SELECTED, getSelected, updateSelectedData } from '../reducers/data';
+import { UPDATE_PARAM, getParams, getCountyLayer, getStateLayer } from '../reducers/map';
+import { UPDATE_SELECTED, getSelected, updateSelectedData, clearSelected, clearSelectedData } from '../reducers/data';
 
 import config from '../config';
 
@@ -40,6 +40,30 @@ function* selectSaga({ payload: selectId }) {
   }
 }
 
+function* reloadSelectSaga({ payload: { scope: _scope, year: _year } }) {
+  // if changing year, no action needed
+  if (_year) return;
+  // clear the stored data
+  yield put(clearSelectedData());
+  // if switch county/state, clear and return
+  if (_scope) {
+    yield put(clearSelected());
+    return;
+  }
+
+  const { crop, vis, scope } = yield select(getParams);
+  const selected = yield select(getSelected);
+
+  // if nothing is selected, return
+  if (!selected.length) return;
+
+  // update all selected ddata
+  const dataArray = yield fetch(`/api/yield/all?${qs.stringify({ crop, vis, scope, selected })}`).then((data) => data.json());
+  console.log(dataArray);
+  yield all(dataArray.map((chartData) => put(updateSelectedData(chartData))));
+}
+
 export default function* projectsListener() {
   yield takeLatest(UPDATE_SELECTED, selectSaga);
+  yield takeLatest(UPDATE_PARAM, reloadSelectSaga);
 }

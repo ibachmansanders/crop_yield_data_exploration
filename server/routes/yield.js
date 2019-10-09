@@ -68,49 +68,59 @@ router.get('/', async (req, res) => {
   }
 });
 
+const getChartData = async (crop, vis, scope, id, res) => {
+  if (scope === 'state') {
+    return db('state_yields')
+      .select('year', 'state_code', 'total_harvested_acres', 'total_yield', 'total_production')
+      .where({ crop })
+      .andWhere('state_code', id)
+      .orderBy('year')
+      // convert data to object for graphing
+      .then((results) => results.reduce((acc, row) => {
+        if (!acc.name) acc.name = row.state_code;
+        if (!acc.id) acc.id = row.state_code;
+        acc.data.push({ x: row.year, y: Number(row[vis]) });
+        return acc;
+      }, { name: null, id: null, data: [] }))
+      .catch((error) => {
+        console.log(`There was an error loading ${id} state data: `, error);
+        res.status(500).json({ error });
+      });
+  }
+  if (scope === 'county') {
+    return db('county_yields')
+      .select('year', 'county_fips', 'county_name', 'total_harvested_acres', 'total_yield', 'total_production')
+      .where({ crop })
+      .andWhere('county_fips', id)
+      .orderBy('year')
+      // convert data to object for graphing
+      .then((results) => results.reduce((acc, row) => {
+        if (!acc.name) acc.name = row.county_name;
+        if (!acc.id) acc.id = row.county_fips;
+        acc.data.push({ x: row.year, y: Number(row[vis]) });
+        return acc;
+      }, { name: null, id: null, data: [] }))
+      .catch((error) => {
+        console.log(`There was an error loading ${id} county data: `, error);
+        res.status(500).json({ error });
+      });
+  }
+};
+
 // request yield and geometry data
 router.get('/:id', async (req, res) => {
   try {
     const { crop, vis, scope } = req.query;
     const { id } = req.params;
 
-    // load yield data depending on scope
-    let data = [];
-
-    if (scope === 'state') {
-      data = await db('state_yields')
-        .select('year', 'state_code', 'total_harvested_acres', 'total_yield', 'total_production')
-        .where({ crop })
-        .andWhere('state_code', id)
-        .orderBy('year')
-        // convert data to object for graphing
-        .then((results) => results.reduce((acc, row) => {
-          if (!acc.name) acc.name = row.state_code;
-          if (!acc.id) acc.id = row.state_code;
-          acc.data.push({ x: row.year, y: Number(row[vis]) });
-          return acc;
-        }, { name: null, id: null, data: [] }))
-        .catch((error) => {
-          console.log(`There was an error loading ${id} state data: `, error);
-          res.status(500).json({ error });
-        });
-    } else if (scope === 'county') {
-      data = await db('county_yields')
-        .select('year', 'county_fips', 'county_name', 'total_harvested_acres', 'total_yield', 'total_production')
-        .where({ crop })
-        .andWhere('county_fips', id)
-        .orderBy('year')
-        // convert data to object for graphing
-        .then((results) => results.reduce((acc, row) => {
-          if (!acc.name) acc.name = row.county_name;
-          if (!acc.id) acc.id = row.county_fips;
-          acc.data.push({ x: row.year, y: Number(row[vis]) });
-          return acc;
-        }, { name: null, id: null, data: [] }))
-        .catch((error) => {
-          console.log(`There was an error loading ${id} county data: `, error);
-          res.status(500).json({ error });
-        });
+    // get data formatted for charts
+    let data = {};
+    if (id === 'all') {
+      let { selected } = req.query;
+      if (!Array.isArray(selected)) selected = [selected];
+      data = await Promise.all(selected.map((_id) => getChartData(crop, vis, scope, _id, res)));
+    } else {
+      data = await getChartData(crop, vis, scope, id, res);
     }
 
     res.status(200).json(data);

@@ -5,6 +5,8 @@ export const LOAD_DATA_ERROR = 'LOAD_DATA_ERROR';
 export const UPDATE_GRAPH_DATA = 'UPDATE_GRAPH_DATA';
 export const UPDATE_SELECTED = 'UPDATE_SELECTED';
 export const UPDATE_SELECTED_DATA = 'UPDATE_SELECTED_DATA';
+export const CLEAR_SELECTED = 'CLEAR_SELECTED';
+export const CLEAR_SELECTED_DATA = 'CLEAR_SELECTED_DATA';
 
 // initial state
 const initialState = {
@@ -25,6 +27,8 @@ export const loadDataError = (payload) => ({ type: LOAD_DATA_ERROR, payload });
 export const updateGraphData = (payload) => ({ type: UPDATE_GRAPH_DATA, payload });
 export const updateSelected = (payload) => ({ type: UPDATE_SELECTED, payload });
 export const updateSelectedData = (payload) => ({ type: UPDATE_SELECTED_DATA, payload });
+export const clearSelected = () => ({ type: CLEAR_SELECTED });
+export const clearSelectedData = () => ({ type: CLEAR_SELECTED_DATA });
 
 // selectors
 export const getFeatures = (state) => state.data.features;
@@ -64,6 +68,10 @@ export default (state = initialState, { type, payload }) => {
       const outData = JSON.parse(JSON.stringify(selectedData));
       return { ...state, selectedData: outData };
     }
+    case CLEAR_SELECTED:
+      return { ...state, selected: [] };
+    case CLEAR_SELECTED_DATA:
+      return { ...state, selectedData: [] };
     default:
       return state;
   }

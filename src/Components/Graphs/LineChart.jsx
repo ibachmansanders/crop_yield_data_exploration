@@ -31,30 +31,38 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-const LineChart = ({ selectedData, vis }) => {
+const LineChart = ({ selectedData, selected, vis }) => {
   const classes = styles();
   // set up title
   let title = 'Crop Yield (Bushels / Acre)';
   if (vis === 'total_harvested_acres') title = 'Harvested Acres';
   if (vis === 'total_production') title = 'Total Production';
   title += ' by Year';
+  // check if graph should show
+  let show = false;
+  const reducedValue = selectedData.reduce((acc, row) => {
+    let val = 0;
+    row.data.forEach(({ y }) => { val += y; });
+    return acc + val;
+  }, 0);
+  if (reducedValue > 0) show = true;
   return (
     <>
       <Typography variant="h6">{title}</Typography>
       <div className={classes.legend}>
-        {selectedData.map(({ name }, index) => (
+        {show && selected.length ? selectedData.map(({ name }, index) => (
           <div key={name} className={classes.swatch} style={{ backgroundColor: config.selectColors[index] }}>{name}</div>
-        ))}
-        {!selectedData.length ? <Typography variant="caption" className={classes.prompt}> *Select from the map to compare</Typography> : null}
+        )) : null}
+        {!selected.length ? <Typography variant="caption" className={classes.prompt}>*Select from the map to compare</Typography> : null}
+        {!show && selected.length ? <Typography className={classes.prompt}>No data available</Typography> : null}
       </div>
-      {selectedData.length ? (
+      {show ? (
         <VictoryChart
           height={window.innerHeight * 0.2}
           padding={{ top: 12, bottom: 24, left: 50, right: 60 }}
           domainPadding={16}
           animate={{ duration: 500 }}
         >
-          {console.log(selectedData)}
           <VictoryAxis
             tickValues={[2014, 2015, 2016, 2017, 2018]}
             style={{
@@ -89,6 +97,10 @@ const LineChart = ({ selectedData, vis }) => {
   );
 };
 
-const mapStateToProps = (state) => ({ selectedData: state.data.selectedData, vis: state.map.vis });
+const mapStateToProps = (state) => ({
+  selectedData: state.data.selectedData,
+  selected: state.data.selected,
+  vis: state.map.vis,
+});
 
 export default connect(mapStateToProps, null)(LineChart);
