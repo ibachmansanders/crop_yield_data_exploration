@@ -1,10 +1,12 @@
 import { fork, all } from 'redux-saga/effects';
 import loadGeometry from './loadGeometry';
 import loadData from './loadData';
+import select from './select';
 
 const sagas = [
   loadData,
   loadGeometry,
+  select,
 ];
 
 function* globalSagas() {

@@ -1,7 +1,7 @@
 import { takeLatest, put, select } from 'redux-saga/effects';
 import qs from 'querystring';
 import { UPDATE_PARAM, getInfoWindow, getMap, getStateLayer, getCountyLayer, getParams } from '../reducers/map';
-import { LOAD_DATA, loadDataError, loadDataSuccess, updateGraphData } from '../reducers/data';
+import { LOAD_DATA, loadDataError, loadDataSuccess, updateGraphData, updateSelected } from '../reducers/data';
 
 import mapData from '../utils/mapData';
 
@@ -51,24 +51,37 @@ function* loadDataSaga() {
       keyProperty = 'county_fips';
       name = 'county_name';
     }
-    // set up the infoWindow
+
+    // store clicked features in state for graphing
     layer.addListener('click', (event) => {
-      const { feature, latLng } = event;
-      const key = feature.getProperty(keyProperty);
-      infoWindow.setContent(`
-      <center><strong>${feature.getProperty(name)}</strong></center>
-        <hr />
-        <center>${vis.replace(/_/g, ' ').toUpperCase()}: ${data[key][vis]}</center>
-      `);
-      infoWindow.setPosition(latLng);
-      infoWindow.open(map);
+      const { feature } = event;
+      // update the store's selected array by adding or removing the feature
+      const id = feature.getProperty(keyProperty);
+      store.dispatch(updateSelected(id));
     });
     // track mouseover of feature identifiers
     layer.addListener('mouseover', (event) => {
+      // update mousOver
       const mouseOver = event.feature.getProperty(keyProperty);
       store.dispatch(updateGraphData({ mouseOver }));
+      // open infoWindow (palceholder)
+      // TODO: resolve hover issue
+      // const { feature, latLng } = event;
+      // const key = feature.getProperty(keyProperty);
+      // infoWindow.setContent(`
+      // <center><strong>${feature.getProperty(name)}</strong></center>
+      //   <hr />
+      //   <center>${vis.replace(/_/g, ' ').toUpperCase()}: ${data[key][vis]}</center>
+      // `);
+      // infoWindow.setPosition(latLng);
+      // infoWindow.open(map);
     });
-    layer.addListener('mouseout', () => store.dispatch(updateGraphData({ mouseOver: null })));
+    layer.addListener('mouseout', () => {
+      // remove mousover tracking
+      store.dispatch(updateGraphData({ mouseOver: null }));
+      // close infoWindow
+      // infoWindow.close();
+    });
 
     mapData(data, layer, keyProperty, vis, quantiles);
   } catch (error) {

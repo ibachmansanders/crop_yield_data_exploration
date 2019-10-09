@@ -26,3 +26,4 @@ Routing and URL query parameters via `react-router-dom`
 Include loading spinners
 Visualize errors with snackbar
 Use land_area attribute to visualize density of crop area by county/state
+Use Immutable.js to control changes to objects in Redux store

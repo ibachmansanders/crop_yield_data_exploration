@@ -1,4 +1,5 @@
 export default {
+  selectColors: ['#e41a1c', '#377eb8', '#e7298a', '#984ea3', '#ff7f00'],
   mapUrl: `https://maps.googleapis.com/maps/api/js?libraries=geometry&key=${process.env.REACT_APP_MAP_KEY}&callback=initMap`,
   mapOptions: {
     center: { lat: 38, lng: -98.58 },
