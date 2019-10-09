@@ -9,8 +9,7 @@ const Barchart = ({ data, x, y, quantiles }) => {
   const clickFunc = (id) => console.log('clicked: ', id);
   const mouseInFunc = (id) => console.log('mouseIn: ', id);
   const mouseOuteFunc = (id) => console.log('mouseOut: ', id);
-  let barWidth = 10;
-  if (document.getElementById('crop-graphs')) barWidth = (document.getElementById('crop-graphs').clientWidth - 200) / data.length;
+
   return (
     <VictoryChart
       height={window.innerHeight * 0.15}
@@ -27,18 +26,19 @@ const Barchart = ({ data, x, y, quantiles }) => {
       />
       <VictoryBar
         data={data.length ? data : null}
-        labels={({ datum }) => `${datum.name} - ${datum[y].toLocaleString()}`}
+        labels={({ datum }) => `${datum.name} - ${datum[y] ? datum[y].toLocaleString() : ''}`}
         labelComponent={<VictoryTooltip style={{ fontSize: 10, fill: 'white' }} flyoutStyle={{ fill: '#006d2c', stroke: '#FFFFFF', strokeWidth: 1 }} />}
         x={x}
         y={y}
         sortKey="y"
         sortOrder="descending"
-        barWidth={barWidth}
+        barRatio={1}
         alignment="start"
         style={{
           data: {
             fill: ({ datum }) => getColor(datum._y, quantiles),
             stroke: '#fff',
+            strokeWidth: 1,
           },
         }}
         events={[

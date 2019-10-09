@@ -8,6 +8,7 @@ import Year from './Year';
 import Crop from './Crop';
 import HarvestedAcres from './HarvestedAcres';
 import TotalYield from './TotalYield';
+import Aggregate from './Aggregate';
 
 const styles = makeStyles((theme) => ({
   paper: {
@@ -32,6 +33,7 @@ const Graphs = ({ vis }) => {
       <Divider className={classes.divider} variant="fullWidth" />
       {vis === 'total_harvested_acres' && <HarvestedAcres />}
       {vis === 'total_yield' && <TotalYield />}
+      <Aggregate />
     </Paper>
   );
 };

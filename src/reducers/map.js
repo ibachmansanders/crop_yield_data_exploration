@@ -14,6 +14,7 @@ const initialState = {
   vis: 'total_yield',
   harvestData: [{ name: '', total_harvested_acres: 0 }],
   yieldData: [{ name: '', total_yield: 0 }],
+  aggregate: [],
 };
 
 // action creators

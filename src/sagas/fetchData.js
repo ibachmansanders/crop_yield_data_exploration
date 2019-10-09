@@ -1,7 +1,7 @@
 import { takeLatest, put, select } from 'redux-saga/effects';
 import qs from 'querystring';
 import { UPDATE_PARAM, getMap, getParams, updateGraphData } from '../reducers/map';
-import { fetchDataError, fetchDataSuccess, FETCH_DATA } from '../reducers/data';
+import { FETCH_DATA, fetchDataError, fetchDataSuccess, getCountyState } from '../reducers/data';
 
 import mapData from '../utils/mapData';
 
@@ -9,12 +9,13 @@ function* fetchDataSaga() {
   try {
     const map = yield select(getMap);
     const { crop, year, vis } = yield select(getParams);
+    const { county, state } = yield select(getCountyState);
 
     // resetting map data, clear it
     map.data.forEach((feature) => map.data.remove(feature));
 
     // if viewing state the app needs new data, load it
-    const { data, quantiles, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year, vis })}`).then((data) => data.json());
+    const { data, quantiles, aggregate, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year, vis, county, state })}`).then((data) => data.json());
     if (error) {
       console.warn('There was an error in the server fetching the state yields: ', error);
       yield put(fetchDataError(error));
@@ -34,7 +35,7 @@ function* fetchDataSaga() {
 
     // store the geoJSON and data
     yield put(fetchDataSuccess({ data, quantiles }));
-    yield put(updateGraphData({ harvestData, yieldData }));
+    yield put(updateGraphData({ harvestData, yieldData, aggregate }));
 
     if (data.features && data.features.length) {
       // add the data to the map

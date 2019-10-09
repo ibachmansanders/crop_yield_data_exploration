@@ -6,10 +6,11 @@ const router = express.Router();
 // request yield and geometry data
 router.get('/', async (req, res) => {
   try {
-    const { crop, year, vis, state_code } = req.query;
+    const { crop, year, vis, county, state } = req.query;
     console.log('fetch yields: ', req.query);
 
     // adjust query depending on whether you're loading states or counties
+    // loading states
     let innerSelect = `
       state_geometry.region, state_geometry.state_code, state_geometry.state_name, state_geometry.land_area,
       state_yields.total_harvested_acres, state_yields.total_yield
@@ -20,7 +21,9 @@ router.get('/', async (req, res) => {
     let _vis;
     if (vis === 'total_harvested_acres') _vis = 'total_harvested_acres';
     if (vis === 'total_yield') _vis = 'total_yield';
-    if (state_code) {
+
+    // loading counties
+    if (state) {
       innerSelect = `
         county_geometry.region, county_geometry.state_code, county_geometry.county_name, county_geometry.land_area,
         county_yields.total_harvested_acres, county_yields.total_yield
@@ -29,6 +32,7 @@ router.get('/', async (req, res) => {
       join = 'county_yields ON county_yields.county_fips = county_geometry.county_fips';
       order = 'county_yields.county_name';
     }
+
     // get the data and geometry
     const results = await db
       .with('results', db.raw(`
@@ -62,7 +66,7 @@ router.get('/', async (req, res) => {
     // get state quantiles
     const [quantiles] = await db(`${table}_yields`)
       .select([
-        db.raw(`percentile_disc(0) WITHIN GROUP (ORDER BY ${table}_yields.total_yield) AS bin1`),
+        db.raw(`percentile_disc(0) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin1`),
         db.raw(`percentile_disc(0.2) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin2`),
         db.raw(`percentile_disc(0.4) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin3`),
         db.raw(`percentile_disc(0.6) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin4`),
@@ -71,8 +75,21 @@ router.get('/', async (req, res) => {
       .where({ crop, year })
       .catch((error) => console.log('There was an error getting quantiles: ', error));
 
+    // get aggregate of current scope
+    const aggregate = await db
+      .with('totals', (queryBuilder) => queryBuilder
+        .select('crop', 'year')
+        .from(`${table}_yields`)
+        .sum({ total_yield: 'total_yield' })
+        .sum({ total_harvested_acres: 'total_harvested_acres' })
+        .groupBy(['crop', 'year'])
+        .orderBy(['crop', 'year'])
+        .catch((error) => console.log('There was an error aggregating data: ', error)))
+      .select('crop', db.raw('jsonb_agg(totals) as years')).from('totals').groupBy('crop')
+      .catch((error) => console.log('There was an error aggregating: ', error));
+
     if (results && results[0] && results[0].row_to_json) {
-      res.status(200).json({ data: results[0].row_to_json, quantiles });
+      res.status(200).json({ data: results[0].row_to_json, quantiles, aggregate });
     } else {
       res.status(500).json({ error: 'Faulty database query' });
     }
