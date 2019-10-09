@@ -1,12 +1,16 @@
 import { takeLatest, put, select } from 'redux-saga/effects';
 import qs from 'querystring';
-import { UPDATE_PARAM, getStateLayer, getCountyLayer, getParams } from '../reducers/map';
+import { UPDATE_PARAM, getInfoWindow, getMap, getStateLayer, getCountyLayer, getParams } from '../reducers/map';
 import { LOAD_DATA, loadDataError, loadDataSuccess, updateGraphData } from '../reducers/data';
 
 import mapData from '../utils/mapData';
 
+import store from '../store';
+
 function* loadDataSaga() {
   const { crop, year, vis, scope } = yield select(getParams);
+  const infoWindow = yield select(getInfoWindow);
+  const map = yield select(getMap);
   // clear unecessary layers
   const stateLayer = yield select(getStateLayer);
   const countyLayer = yield select(getCountyLayer);
@@ -39,7 +43,34 @@ function* loadDataSaga() {
     yield put(updateGraphData({ barChartData }));
 
     // map the data
-    mapData(data, scope === 'state' ? stateLayer : countyLayer, scope === 'state' ? 'state_code' : 'county_fips', vis, quantiles);
+    let layer = stateLayer;
+    let keyProperty = 'state_code';
+    let name = 'state_code';
+    if (scope === 'county') {
+      layer = countyLayer;
+      keyProperty = 'county_fips';
+      name = 'county_name';
+    }
+    // set up the infoWindow
+    layer.addListener('click', (event) => {
+      const { feature, latLng } = event;
+      const key = feature.getProperty(keyProperty);
+      infoWindow.setContent(`
+      <center><strong>${feature.getProperty(name)}</strong></center>
+        <hr />
+        <center>${vis.replace(/_/g, ' ').toUpperCase()}: ${data[key][vis]}</center>
+      `);
+      infoWindow.setPosition(latLng);
+      infoWindow.open(map);
+    });
+    // track mouseover of feature identifiers
+    layer.addListener('mouseover', (event) => {
+      const mouseOver = event.feature.getProperty(keyProperty);
+      store.dispatch(updateGraphData({ mouseOver }));
+    });
+    layer.addListener('mouseout', () => store.dispatch(updateGraphData({ mouseOver: null })));
+
+    mapData(data, layer, keyProperty, vis, quantiles);
   } catch (error) {
     console.warn(`There was an error fetching the ${scope} yields data: `, error);
     yield put(loadDataError(error));

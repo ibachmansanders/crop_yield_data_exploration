@@ -61,14 +61,14 @@ const Barchart = ({ data, vis, quantiles, scope, crop, stateLayer, countyLayer }
       if (a[vis] < b[vis]) return 1;
       return 0;
     });
-    console.log(data);
+    // TODO: perhaps aggregate data into 50 groups?
     data = data.filter((row) => !row.name.includes('OTHER (COMBINED) COUNTIES')).slice(0, 50);
   }
 
   // catch when there's no data available
   if (!data.length) return <Typography variant="button">No {crop} data available for this year</Typography>;
   // catch when there's no specific property data available
-  if (!data.filter((row) => row[vis] > 0).length) return <Typography variant="button">No {crop} {vis.replace(/_/, ' ')} data available for this year</Typography>;
+  if (!data.filter((row) => row[vis] > 0).length) return <Typography variant="button">No {crop} {vis.replace(/_/g, ' ')} data available for this year</Typography>;
 
   return (
     <>
