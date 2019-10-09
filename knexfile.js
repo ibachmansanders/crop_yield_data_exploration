@@ -47,6 +47,8 @@ module.exports = {
     connection: {
       port: process.env.CROP_YIELD_PORT,
       host: process.env.CROP_YIELD_HOST,
+      // alterante host for uploading data
+      // host: process.env.CROP_YIELD_MIGRATE_HOST,
       user: process.env.CROP_YIELD_USER,
       password: process.env.CROP_YIELD_PASS,
       database: process.env.CROP_YIELD_DB,

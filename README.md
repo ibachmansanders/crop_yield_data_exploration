@@ -20,10 +20,27 @@ Instert counties to local DB: `ogr2ogr -f "PostgreSQL" PG:"dbname=crop_yields us
 
 Connection parameters will have to be adjusted depending on which environment you're writing to - this is for a local database.
 
+### Hosting the Database
+During development I worked locally, however I used Google Cloud for live deployment.  Cloud SQL was quick to set up and connect to, and costs very little for small apps like this.
+
+### Hosting the app
+Again, I used GCP with App Engine Standard for convenience and to show off my GCP knowhow.
+
+## The Backend
+The application backend is a fairly typical NodeJS backend using `Express` as the framework.  `helmet`, `cors`, and `epxress-enforces-ssl` provide some basic security.  The backend connects to the database using `knex.js`, and I use a combination of normal SQl and `knex` syntax to call data from the database.
+
+I just set up two routes- `geometry` to handle calls for geometry, which only occurs when the app is first loaded, and `yield` to handle data calls.  Since the the geometry ultimately wasn't that large, I found that Google Maps would be much more performant if I only loaded the geometry once, and then applied styling and props to it on the client side.  I included props in each geometry feature so that I could connect values to it in-app.
+
+## The Front End
+Once the app is laoded with geometry, it calls properties for either states or counties, depending on the scope chosen by the user.  I used Google Maps API to load the geometry to Data layers, which can be (farely) easily manipulated for this app's needs.  As the user changes parameters, the resulting data updates the styling of the map as well as the charts on the right side.  These are made using [Victory](https://formidable.com/open-source/), whic is built on top of D3, and allows me to build fairly customizeable charts as React apps.  I got a little carried away with animation.  I also included a chart that allows you to select several features on the map and see changes in crop properties over time compared on the same graph.  This works, so-so, and if I had more time I'd refine the logic behind the UI and clean up the backend- it seems that extra requests are firing.  My final compromise made due to time was the fact that a bar chart of 1,300 counties looks terrible, and so I simply cut it at 50, organized by crop property, descending.  Given time I'd group all counties into 50 groups, so that you could at least view an aggregate of all the data on one chart.  Ah well.
+
 ## Planned Features
 
-Routing and URL query parameters via `react-router-dom`
-Include loading spinners
-Visualize errors with snackbar
-Use land_area attribute to visualize density of crop area by county/state
-Use Immutable.js to control changes to objects in Redux store
+* Routing and URL query parameters via `react-router-dom`
+* Include loading spinners
+* Visualize errors with snackbar
+* Use land_area attribute to visualize density of crop area by county/state
+* Use Immutable.js to control changes to objects in Redux store
+* Use a read-only user on the deployed database (I did so for local)
+* Highlihgt bar chart entries when mousing over map features
+* Grouping bar chart values into 50 bins when dealing with many entries
