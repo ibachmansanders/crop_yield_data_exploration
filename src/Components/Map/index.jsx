@@ -9,7 +9,7 @@ import { fetchData } from '../../reducers/data';
 import loadScript from '../../utils/loadScript';
 import config from '../../config';
 
-import Vis from './Vis';
+import VisScope from './VisScope';
 
 const styles = (theme) => ({
   root: {
@@ -48,7 +48,7 @@ class Map extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Vis />
+        <VisScope />
         <div className={classes.map} id="map" />
       </div>
     );

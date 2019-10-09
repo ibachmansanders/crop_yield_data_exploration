@@ -25,7 +25,8 @@ router.get('/', async (req, res) => {
     // loading counties
     if (scope === 'county') {
       innerSelect = `
-        county_geometry.region, county_geometry.state_code, county_geometry.county_name, county_geometry.land_area,
+        county_geometry.county_fips, county_geometry.land_area,
+        county_yields.county_name, county_yields.state_code,
         county_yields.total_harvested_acres, county_yields.total_yield
       `;
       table = 'county';
