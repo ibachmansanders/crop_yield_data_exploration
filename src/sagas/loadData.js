@@ -9,9 +9,9 @@ function* loadDataSaga() {
   const { crop, year, vis, scope } = yield select(getParams);
   // clear unecessary layers
   const stateLayer = yield select(getStateLayer);
-  if (scope === 'county') stateLayer.setStyle({ visible: false });
   const countyLayer = yield select(getCountyLayer);
-  if (scope === 'state') countyLayer.setStyle({ visible: false });
+  if (scope === 'county' && stateLayer) stateLayer.setStyle({ visible: false });
+  if (scope === 'state' && countyLayer) countyLayer.setStyle({ visible: false });
   try {
     // load crop data
     const { data, quantiles, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year, vis, scope })}`).then((data) => data.json());

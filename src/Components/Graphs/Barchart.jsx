@@ -6,11 +6,41 @@ import { VictoryChart, VictoryTooltip, VictoryAxis, VictoryBar } from 'victory';
 import getColor from '../../utils/getColor';
 import capitalize from '../../utils/capitalize';
 
-const Barchart = ({ data, vis, quantiles, scope, crop }) => {
-  // TODO: pass click event to map to select state
-  const clickFunc = (id) => console.log('clicked: ', id);
-  const mouseInFunc = (id) => console.log('mouseIn: ', id);
-  const mouseOuteFunc = (id) => console.log('mouseOut: ', id);
+const Barchart = ({ data, vis, quantiles, scope, crop, stateLayer, countyLayer }) => {
+  // TODO: pass click event to app for comparison
+  const clickFunc = (id) => {
+    console.log('clicked: ', id);
+  };
+  const mouseInFunc = (id) => {
+    // select the matching map feature and highlight it
+    if (scope === 'state') {
+      stateLayer.forEach((feature) => {
+        const value = feature.getProperty('state_code');
+        if (value === id) stateLayer.overrideStyle(feature, { fillOpacity: 1, strokeWeight: 2 });
+      });
+    }
+    if (scope === 'county') {
+      countyLayer.forEach((feature) => {
+        const value = feature.getProperty('county_fips');
+        if (value === id) countyLayer.overrideStyle(feature, { fillOpacity: 1, strokeWeight: 2 });
+      });
+    }
+  };
+  const mouseOuteFunc = (id) => {
+    // select the matching map feature and remove the highlight
+    if (scope === 'state') {
+      stateLayer.forEach((feature) => {
+        const value = feature.getProperty('state_code');
+        if (value === id) stateLayer.overrideStyle(feature, { fillOpacity: null, strokeWeight: 1 });
+      });
+    }
+    if (scope === 'county') {
+      countyLayer.forEach((feature) => {
+        const value = feature.getProperty('county_fips');
+        if (value === id) countyLayer.overrideStyle(feature, { fillOpacity: null, strokeWeight: 1 });
+      });
+    }
+  };
 
   // set up axis properties
   const x = 'name';
@@ -25,7 +55,15 @@ const Barchart = ({ data, vis, quantiles, scope, crop }) => {
   if (data.length > 50) title = `Top 50 ${title} (out of ${data.length})`;
 
   // limit data to top 300
-  if (data.length > 50) data = data.slice(0, 50);
+  if (data.length > 50) {
+    data.sort((a, b) => {
+      if (a[vis] > b[vis]) return -1;
+      if (a[vis] < b[vis]) return 1;
+      return 0;
+    });
+    console.log(data);
+    data = data.filter((row) => !row.name.includes('OTHER (COMBINED) COUNTIES')).slice(0, 50);
+  }
 
   // catch when there's no data available
   if (!data.length) return <Typography variant="button">No {crop} data available for this year</Typography>;
@@ -124,6 +162,8 @@ const mapStateToProps = (state) => ({
   vis: state.map.vis,
   scope: state.map.scope,
   crop: state.map.crop,
+  stateLayer: state.map.stateLayer,
+  countyLayer: state.map.countyLayer,
 });
 
 const mapDispatchToProps = (dispatch) => ({});

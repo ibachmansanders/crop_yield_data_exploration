@@ -13,13 +13,17 @@ function* loadGeometrySaga() {
       yield put(loadGeometryError(error));
       return;
     }
-    // create the data layer to style
+    // create the state geometry layer
     const stateLayer = new google.maps.Data({ map });
     stateLayer.setStyle({ visible: false });
     stateLayer.addGeoJson(stateGeometry);
+
     // store the geoJSON
     stateLayer.toJSON = () => '<StateLayer>';
     yield put(loadGeometrySuccess({ stateLayer }));
+
+    // success? call some data
+    yield put(loadData());
 
     // load county geometry
     const { countyGeometry, error: _error } = yield fetch('/api/geometry/county').then((data) => data.json());
@@ -28,16 +32,14 @@ function* loadGeometrySaga() {
       yield put(loadGeometryError(_error));
       return;
     }
-    // create the data layer to style
+    // create the county geometry layer
     const countyLayer = new google.maps.Data({ map });
     countyLayer.setStyle({ visible: false });
     countyLayer.addGeoJson(countyGeometry);
+
     // store the geoJSON
     countyLayer.toJSON = () => '<countyLayer>';
     yield put(loadGeometrySuccess({ countyLayer }));
-
-    // success? call some data
-    yield put(loadData());
   } catch (error) {
     console.warn('There was an error fetching the geometry: ', error);
     yield put(loadGeometryError(error));
