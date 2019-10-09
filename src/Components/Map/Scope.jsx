@@ -19,7 +19,7 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-const Vis = ({ scope, updateParam }) => {
+const Vis = ({ scope, updateParam, countyLayer }) => {
   const classes = styles();
   return (
     <Paper className={classes.root}>
@@ -34,6 +34,7 @@ const Vis = ({ scope, updateParam }) => {
             value="county"
             control={<Radio color="secondary" />}
             label={<Typography variant="caption">SHOW COUNTIES</Typography>}
+            disabled={!countyLayer}
           />
         </RadioGroup>
       </FormControl>
@@ -43,6 +44,7 @@ const Vis = ({ scope, updateParam }) => {
 
 const mapStateToProps = (state) => ({
   scope: state.map.scope,
+  countyLayer: state.map.countyLayer,
 });
 
 const mapDispatchToProps = (dispatch) => ({ updateParam: (payload) => dispatch(updateParam(payload)) });

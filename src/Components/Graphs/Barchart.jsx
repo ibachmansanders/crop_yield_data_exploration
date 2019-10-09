@@ -17,13 +17,13 @@ const Barchart = ({ data, vis, quantiles, scope, crop, stateLayer, countyLayer }
     if (scope === 'state') {
       stateLayer.forEach((feature) => {
         const value = feature.getProperty('state_code');
-        if (value === id) stateLayer.overrideStyle(feature, { fillOpacity: 1, strokeWeight: 2 });
+        if (value === id) stateLayer.overrideStyle(feature, { fillOpacity: 1, strokeColor: 'indianred', strokeWeight: 2 });
       });
     }
     if (scope === 'county') {
       countyLayer.forEach((feature) => {
         const value = feature.getProperty('county_fips');
-        if (value === id) countyLayer.overrideStyle(feature, { fillOpacity: 1, strokeWeight: 2 });
+        if (value === id) countyLayer.overrideStyle(feature, { fillOpacity: 1, strokeColor: 'indianred', strokeWeight: 2 });
       });
     }
   };
@@ -32,13 +32,13 @@ const Barchart = ({ data, vis, quantiles, scope, crop, stateLayer, countyLayer }
     if (scope === 'state') {
       stateLayer.forEach((feature) => {
         const value = feature.getProperty('state_code');
-        if (value === id) stateLayer.overrideStyle(feature, { fillOpacity: null, strokeWeight: 1 });
+        if (value === id) stateLayer.overrideStyle(feature, { fillOpacity: null, strokeColor: '#006d2c', strokeWeight: 1 });
       });
     }
     if (scope === 'county') {
       countyLayer.forEach((feature) => {
         const value = feature.getProperty('county_fips');
-        if (value === id) countyLayer.overrideStyle(feature, { fillOpacity: null, strokeWeight: 1 });
+        if (value === id) countyLayer.overrideStyle(feature, { fillOpacity: null, strokeColor: '#006d2c', strokeWeight: 1 });
       });
     }
   };
@@ -100,7 +100,7 @@ const Barchart = ({ data, vis, quantiles, scope, crop, stateLayer, countyLayer }
           style={{
             data: {
               fill: ({ datum }) => getColor(datum._y, quantiles),
-              stroke: '#fff',
+              stroke: '#006d2c',
               strokeWidth: 1,
             },
           }}

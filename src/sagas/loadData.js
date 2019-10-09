@@ -10,8 +10,8 @@ import store from '../store';
 
 function* loadDataSaga() {
   const { crop, year, vis, scope } = yield select(getParams);
-  const infoWindow = yield select(getInfoWindow);
-  const map = yield select(getMap);
+  // const infoWindow = yield select(getInfoWindow);
+  // const map = yield select(getMap);
   // clear unecessary layers
   const stateLayer = yield select(getStateLayer);
   const countyLayer = yield select(getCountyLayer);
@@ -46,11 +46,11 @@ function* loadDataSaga() {
     // map the data
     let layer = stateLayer;
     let keyProperty = 'state_code';
-    let name = 'state_code';
+    // let name = 'state_code';
     if (scope === 'county') {
       layer = countyLayer;
       keyProperty = 'county_fips';
-      name = 'county_name';
+      // name = 'county_name';
     }
 
     // store clicked features in state for graphing

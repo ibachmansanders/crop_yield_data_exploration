@@ -6,8 +6,6 @@ import Typography from '@material-ui/core/Typography';
 
 import { updateParam } from '../../reducers/map';
 
-import getColor from '../../utils/getColor';
-
 const styles = makeStyles((theme) => ({
   root: {
     left: 6,
