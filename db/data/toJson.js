@@ -63,7 +63,8 @@ Papa.parse(records, {
       if (state.total_yield === 0) delete state.total_yield;
       if (state.total_production === 0) delete state.total_production;
       // calculate average of state total yield
-      if (state.count > 0) state.total_yield /= state.count;
+      // NOTE that I am rounding the total yield to a fixed number of decimal places to aovid data entry field limits - precision can be addjusted
+      if (state.count > 0) state.total_yield = +(state.total_yield / state.count).toFixed(2);
       delete state.count;
       return state;
     });
