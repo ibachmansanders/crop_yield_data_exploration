@@ -13,7 +13,7 @@ const initialState = {
   barChartData: [{ name: '', total_yield: 0, total_harvested_acres: 0 }],
   mouseOver: null,
   selected: [],
-  selectedData: [{ name: 'cat' }],
+  selectedData: [],
   loading: false,
   error: null,
 };

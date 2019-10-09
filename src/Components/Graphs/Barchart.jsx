@@ -5,6 +5,7 @@ import { VictoryChart, VictoryTooltip, VictoryAxis, VictoryBar } from 'victory';
 
 import getColor from '../../utils/getColor';
 import capitalize from '../../utils/capitalize';
+import axisNumber from '../../utils/axisNumber';
 
 const Barchart = ({ data, vis, quantiles, scope, crop, stateLayer, countyLayer }) => {
   // TODO: pass click event to app for comparison
@@ -81,14 +82,7 @@ const Barchart = ({ data, vis, quantiles, scope, crop, stateLayer, countyLayer }
       >
         <VictoryAxis
           dependentAxis
-          tickFormat={(tick) => {
-            const value = Number(tick);
-            if (value < 9999) return value.toLocaleString();
-            if (value < 1000000) return `${Math.round(value / 1000)}K`;
-            if (value < 10000000) return `${(value / 1000000).toFixed(1)}M`;
-            if (value < 1000000000) return `${Math.round((value / 1000000))}M`;
-            if (value < 1000000000000) return `${Math.round((value / 1000000000))}B`;
-          }}
+          tickFormat={(tick) => axisNumber(tick)}
           style={{
             tickLabels: { fontSize: 12, fontFamily: 'sans-serif' },
           }}

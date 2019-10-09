@@ -87,7 +87,7 @@ router.get('/:id', async (req, res) => {
         .then((results) => results.reduce((acc, row) => {
           if (!acc.name) acc.name = row.state_code;
           if (!acc.id) acc.id = row.state_code;
-          acc.data.push({ x: row.year, y: row[vis] });
+          acc.data.push({ x: row.year, y: Number(row[vis]) });
           return acc;
         }, { name: null, id: null, data: [] }))
         .catch((error) => {
@@ -104,7 +104,7 @@ router.get('/:id', async (req, res) => {
         .then((results) => results.reduce((acc, row) => {
           if (!acc.name) acc.name = row.county_name;
           if (!acc.id) acc.id = row.county_fips;
-          acc.data.push({ x: row.year, y: row[vis] });
+          acc.data.push({ x: row.year, y: Number(row[vis]) });
           return acc;
         }, { name: null, id: null, data: [] }))
         .catch((error) => {
