@@ -17,8 +17,12 @@ Papa.parse(records, {
     let newRow = {};
     // clean up the data entry a bit
     Object.entries(row.data).forEach(([key, value]) => {
-      if (value !== '') {
-        if (key === 'FIPS_CODE') key = 'county_fips';
+      if (value && value !== '') {
+        // format fips_code key and ensure the value is a 5 digit string
+        if (key === 'FIPS_CODE') {
+          key = 'county_fips';
+          value = value.padStart(5, 0);
+        }
         newRow[key.toLowerCase()] = value;
       }
     });
