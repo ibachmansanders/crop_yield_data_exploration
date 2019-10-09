@@ -6,7 +6,7 @@ const router = express.Router();
 // request yield and geometry data
 router.get('/', async (req, res) => {
   try {
-    const { crop, year, vis, county, state } = req.query;
+    const { crop, year, vis, scope } = req.query;
     console.log('fetch yields: ', req.query);
 
     // adjust query depending on whether you're loading states or counties
@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
     if (vis === 'total_yield') _vis = 'total_yield';
 
     // loading counties
-    if (state) {
+    if (scope === 'county') {
       innerSelect = `
         county_geometry.region, county_geometry.state_code, county_geometry.county_name, county_geometry.land_area,
         county_yields.total_harvested_acres, county_yields.total_yield

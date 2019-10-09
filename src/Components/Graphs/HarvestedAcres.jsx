@@ -16,7 +16,7 @@ const HarvestedAcres = ({ harvestData }) => (
 );
 
 const mapStateToProps = (state) => ({
-  harvestData: state.map.harvestData,
+  harvestData: state.data.harvestData,
 });
 
 export default connect(mapStateToProps, null)(HarvestedAcres);

@@ -31,10 +31,7 @@ const CropChange = ({ aggregate, vis }) => (
       }}
     />
     <VictoryStack
-      labels={({ datum }) => {
-        console.log(datum);
-        return datum._y;
-      }}
+      labels={({ datum }) => datum._y}
       labelComponent={<VictoryTooltip style={{ fontSize: 10, fill: 'white' }} flyoutStyle={{ fill: '#006d2c', stroke: '#FFFFFF', strokeWidth: 1 }} />}
     >
       {aggregate.map((crop) => (
@@ -73,7 +70,7 @@ const HarvestedAcres = ({ vis, aggregate }) => {
 
 const mapStateToProps = (state) => ({
   vis: state.map.vis,
-  aggregate: state.map.aggregate,
+  aggregate: state.data.aggregate,
 });
 
 export default connect(mapStateToProps, null)(HarvestedAcres);

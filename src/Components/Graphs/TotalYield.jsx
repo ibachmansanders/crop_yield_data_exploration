@@ -16,7 +16,7 @@ const TotalYield = ({ yieldData }) => (
 );
 
 const mapStateToProps = (state) => ({
-  yieldData: state.map.yieldData,
+  yieldData: state.data.yieldData,
 });
 
 export default connect(mapStateToProps, null)(TotalYield);

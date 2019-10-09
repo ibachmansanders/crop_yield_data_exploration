@@ -2,11 +2,15 @@
 export const FETCH_DATA = 'FETCH_DATA';
 export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
 export const FETCH_DATA_ERROR = 'FETCH_DATA_ERROR';
+export const UPDATE_GRAPH_DATA = 'UPDATE_GRAPH_DATA';
 
 // initial state
 const initialState = {
   features: null,
   quantiles: {},
+  harvestData: [{ name: '', total_harvested_acres: 0 }],
+  yieldData: [{ name: '', total_yield: 0 }],
+  aggregate: [],
   loading: false,
   error: null,
 };
@@ -15,6 +19,7 @@ const initialState = {
 export const fetchData = () => ({ type: FETCH_DATA });
 export const fetchDataSuccess = (payload) => ({ type: FETCH_DATA_SUCCESS, payload });
 export const fetchDataError = (payload) => ({ type: FETCH_DATA_ERROR, payload });
+export const updateGraphData = (payload) => ({ type: UPDATE_GRAPH_DATA, payload });
 
 // selectors
 export const getFeatures = (state) => state.data.features;
@@ -29,6 +34,8 @@ export default (state = initialState, { type, payload }) => {
       return { ...state, features: payload.data, quantiles: payload.quantiles, loading: false, error: null };
     case FETCH_DATA_ERROR:
       return { ...state, features: null, quantiles: {}, loading: false, error: payload };
+    case UPDATE_GRAPH_DATA:
+      return { ...state, ...payload };
     default:
       return state;
   }
