@@ -8,63 +8,48 @@ router.get('/', async (req, res) => {
   try {
     const { crop, year, vis, scope } = req.query;
 
+    // load yield data depending on scope
+    let data = {};
+
+    if (scope === 'state') {
+      data = await db('state_yields')
+        .select('state_code', 'total_harvested_acres', 'total_yield', 'total_production')
+        .where({ crop, year })
+        .orderBy('state_code')
+        // convert data to object for lookup in app
+        .then((results) => results.reduce((acc, row) => {
+          acc[row.state_code] = row;
+          return acc;
+        }, {}))
+        .catch((error) => {
+          console.log('There was an error loading state data: ', error);
+          res.status(500).json({ error });
+        });
+    } else if (scope === 'county') {
+      data = await db('county_yields')
+        .select('county_fips', 'county_name', 'state_code', 'total_harvested_acres', 'total_yield', 'total_production')
+        .where({ crop, year })
+        .orderBy('county_name')
+        // convert data to object for lookup in app
+        .then((results) => results.reduce((acc, row) => {
+          acc[row.county_fips] = row;
+          return acc;
+        }, {}))
+        .catch((error) => {
+          console.log('There was an error loading county data: ', error);
+          res.status(500).json({ error });
+        });
+    }
+
     // adjust query depending on whether you're loading states or counties
-    // loading states
-    let innerSelect = `
-      state_geometry.region, state_geometry.state_code, state_geometry.state_name, state_geometry.land_area,
-      state_yields.total_harvested_acres, state_yields.total_yield, state_yields.total_production
-    `;
-    let table = 'state';
-    let join = 'state_yields ON state_yields.state_code = state_geometry.state_code';
-    let order = 'state_yields.state_code';
     let _vis;
     if (vis === 'total_harvested_acres') _vis = 'total_harvested_acres';
     if (vis === 'total_yield') _vis = 'total_yield';
     if (vis === 'total_production') _vis = 'total_production';
-
-    // loading counties
-    if (scope === 'county') {
-      innerSelect = `
-        county_geometry.county_fips, county_geometry.land_area,
-        county_yields.county_name, county_yields.state_code,
-        county_yields.total_harvested_acres, county_yields.total_yield, county_yields.total_production
-      `;
-      table = 'county';
-      join = 'county_yields ON county_yields.county_fips = county_geometry.county_fips';
-      order = 'county_yields.county_name';
-    }
-
-    // get the data and geometry
-    const results = await db
-      .with('results', db.raw(`
-        SELECT row_to_json(fc)
-        FROM (
-          SELECT
-            'FeatureCollection' AS "type",
-            array_to_json(array_agg(f)) AS "features"
-          FROM (
-            SELECT
-              'Feature' AS "type",
-              ST_AsGeoJSON(ST_Transform(geometry, 4326)) :: json AS "geometry",
-              (
-                SELECT json_strip_nulls(row_to_json(t))
-                FROM (
-                  SELECT
-                    ${innerSelect}
-                ) t
-              ) AS "properties"
-            FROM ${table}_geometry
-            INNER JOIN ${join}
-            WHERE ${table}_yields.crop = :crop AND ${table}_yields.year= :year
-            ORDER BY ${order}
-          ) AS f
-        ) AS fc
-      `, { crop, year }))
-      .select('*')
-      .from('results')
-      .catch((error) => console.log('There was a database error getting state yields: ', error));
-
-    // get state quantiles
+    let table;
+    if (scope === 'state') table = scope;
+    if (scope === 'county') table = scope;
+    // get quantiles for choropleth and bar graphs
     const [quantiles] = await db(`${table}_yields`)
       .select([
         db.raw(`percentile_disc(0) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin1`),
@@ -89,11 +74,7 @@ router.get('/', async (req, res) => {
       .select('crop', db.raw('jsonb_agg(totals) as years')).from('totals').groupBy('crop')
       .catch((error) => console.log('There was an error aggregating: ', error));
 
-    if (results && results[0] && results[0].row_to_json) {
-      res.status(200).json({ data: results[0].row_to_json, quantiles, aggregate });
-    } else {
-      res.status(500).json({ error: 'Faulty database query' });
-    }
+    res.status(200).json({ data, quantiles, aggregate });
   } catch (error) {
     console.error('There was a server error getting yields: ', error);
     res.status(500).json({ error });

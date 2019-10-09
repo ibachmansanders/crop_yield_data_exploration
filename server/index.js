@@ -8,6 +8,7 @@ const cors = require('cors');
 const expressEnforcesSsl = require('express-enforces-ssl');
 
 // routes
+const geometryRoute = require('./routes/geometry');
 const yieldRoute = require('./routes/yield');
 
 // create server
@@ -41,6 +42,7 @@ if (process.env.NODE_ENV !== 'development') {
 app.use(bodyParser.json({ limit: '2mb' }));
 
 // routes
+app.use('/api/geometry', cors(corsOptions), geometryRoute);
 app.use('/api/yield', cors(corsOptions), yieldRoute);
 
 // set the app listening

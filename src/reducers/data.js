@@ -1,7 +1,7 @@
 // action types
-export const FETCH_DATA = 'FETCH_DATA';
-export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
-export const FETCH_DATA_ERROR = 'FETCH_DATA_ERROR';
+export const LOAD_DATA = 'LOAD_DATA';
+export const LOAD_DATA_SUCCESS = 'LOAD_DATA_SUCCESS';
+export const LOAD_DATA_ERROR = 'LOAD_DATA_ERROR';
 export const UPDATE_GRAPH_DATA = 'UPDATE_GRAPH_DATA';
 
 // initial state
@@ -16,9 +16,9 @@ const initialState = {
 };
 
 // action creators
-export const fetchData = () => ({ type: FETCH_DATA });
-export const fetchDataSuccess = (payload) => ({ type: FETCH_DATA_SUCCESS, payload });
-export const fetchDataError = (payload) => ({ type: FETCH_DATA_ERROR, payload });
+export const loadData = () => ({ type: LOAD_DATA });
+export const loadDataSuccess = (payload) => ({ type: LOAD_DATA_SUCCESS, payload });
+export const loadDataError = (payload) => ({ type: LOAD_DATA_ERROR, payload });
 export const updateGraphData = (payload) => ({ type: UPDATE_GRAPH_DATA, payload });
 
 // selectors
@@ -28,11 +28,11 @@ export const getQuantiles = (state) => state.data.quantiles;
 // reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case FETCH_DATA:
+    case LOAD_DATA:
       return { ...state, features: null, quantiles: {}, loading: true, error: null };
-    case FETCH_DATA_SUCCESS:
+    case LOAD_DATA_SUCCESS:
       return { ...state, features: payload.data, quantiles: payload.quantiles, loading: false, error: null };
-    case FETCH_DATA_ERROR:
+    case LOAD_DATA_ERROR:
       return { ...state, features: null, quantiles: {}, loading: false, error: payload };
     case UPDATE_GRAPH_DATA:
       return { ...state, ...payload };

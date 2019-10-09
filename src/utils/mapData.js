@@ -1,13 +1,20 @@
 import getColor from './getColor';
 
-export default (map, geojson, property, quantiles) => {
-  // load data to the map
-  map.data.addGeoJson(geojson);
-
+export default (data, layer, keyProperty, property, quantiles) => {
   // style based on the selected property
-  map.data.setStyle((feature) => {
+  layer.setStyle((feature) => {
     // get the value to style by
-    const value = feature.getProperty(property);
+    const key = feature.getProperty(keyProperty);
+
+    // make sure the feature should show up
+    if (!data[key]) {
+      return {
+        clickable: false,
+        visible: false,
+      };
+    }
+
+    const value = data[key][property];
 
     // return the style object
     return {

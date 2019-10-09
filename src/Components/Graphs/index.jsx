@@ -32,8 +32,8 @@ const Graphs = ({ vis }) => {
       <Year />
       <Divider className={classes.divider} variant="fullWidth" />
       {/* TODO: combine all bar charts into one */}
-      {vis === 'total_harvested_acres' && <HarvestedAcres />}
-      {vis === 'total_yield' && <TotalYield />}
+      {/* {vis === 'total_harvested_acres' && <HarvestedAcres />}
+      {vis === 'total_yield' && <TotalYield />} */}
       <Aggregate />
     </Paper>
   );

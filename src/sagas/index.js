@@ -1,8 +1,10 @@
 import { fork, all } from 'redux-saga/effects';
-import fetchData from './fetchData';
+import loadGeometry from './loadGeometry';
+import loadData from './loadData';
 
 const sagas = [
-  fetchData,
+  loadData,
+  loadGeometry,
 ];
 
 function* globalSagas() {
