@@ -24,7 +24,7 @@ Connection parameters will have to be adjusted depending on which environment yo
 During development I worked locally, however I used Google Cloud for live deployment.  Cloud SQL was quick to set up and connect to, and costs very little for small apps like this.
 
 ### Hosting the app
-Again, I used GCP with App Engine Standard for convenience and to show off my GCP knowhow.
+Again, I used GCP with App Engine Standard for convenience and to show off my GCP knowhow. A note on deployment: I stripped my app.yaml of environmental variables, and the rest are stored in .env.  You'll need to fill those in yourself.
 
 ## The Backend
 The application backend is a fairly typical NodeJS backend using `Express` as the framework.  `helmet`, `cors`, and `epxress-enforces-ssl` provide some basic security.  The backend connects to the database using `knex.js`, and I use a combination of normal SQl and `knex` syntax to call data from the database.
