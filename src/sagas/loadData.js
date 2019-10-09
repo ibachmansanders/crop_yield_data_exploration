@@ -21,24 +21,22 @@ function* loadDataSaga() {
       return;
     }
 
-    // create harvestData and yieldData arrays for graphing data
-    const harvestData = [];
-    const yieldData = [];
+    // create data graphing array
+    const barChartData = [];
     Object.values(data).forEach((row) => {
-      const { state_code, county_fips, county_name, total_harvested_acres, total_yield } = row;
+      const { state_code, county_fips, county_name, total_harvested_acres, total_yield, total_production } = row;
       let id = state_code;
       let name = state_code;
       if (scope === 'county') {
         id = county_fips;
-        name = county_name;
+        name = `${county_name}-${state_code}`;
       }
-      if (total_harvested_acres) harvestData.push({ id, name, total_harvested_acres });
-      if (total_yield) yieldData.push({ id, name, total_yield });
+      barChartData.push({ id, name, total_harvested_acres, total_yield: Number(total_yield), total_production: Number(total_production) });
     });
 
     // store the geoJSON and data
     yield put(loadDataSuccess({ data, quantiles }));
-    yield put(updateGraphData({ harvestData, yieldData, aggregate }));
+    yield put(updateGraphData({ barChartData, aggregate }));
 
     // map the data
     mapData(data, scope === 'state' ? stateLayer : countyLayer, scope === 'state' ? 'state_code' : 'county_fips', vis, quantiles);

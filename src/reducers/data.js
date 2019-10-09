@@ -8,8 +8,7 @@ export const UPDATE_GRAPH_DATA = 'UPDATE_GRAPH_DATA';
 const initialState = {
   features: null,
   quantiles: {},
-  harvestData: [{ name: '', total_harvested_acres: 0 }],
-  yieldData: [{ name: '', total_yield: 0 }],
+  barChartData: [{ name: '', total_yield: 0, total_harvested_acres: 0 }],
   aggregate: [],
   loading: false,
   error: null,

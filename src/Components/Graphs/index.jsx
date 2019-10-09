@@ -6,8 +6,7 @@ import Divider from '@material-ui/core/Divider';
 
 import Year from './Year';
 import Crop from './Crop';
-import HarvestedAcres from './HarvestedAcres';
-import TotalYield from './TotalYield';
+import Barchart from './Barchart';
 import Aggregate from './Aggregate';
 
 const styles = makeStyles((theme) => ({
@@ -31,9 +30,7 @@ const Graphs = ({ vis }) => {
       <Crop />
       <Year />
       <Divider className={classes.divider} variant="fullWidth" />
-      {/* TODO: combine all bar charts into one */}
-      {/* {vis === 'total_harvested_acres' && <HarvestedAcres />}
-      {vis === 'total_yield' && <TotalYield />} */}
+      <Barchart />
       <Aggregate />
     </Paper>
   );
