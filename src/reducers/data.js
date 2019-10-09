@@ -7,8 +7,6 @@ export const FETCH_DATA_ERROR = 'FETCH_DATA_ERROR';
 const initialState = {
   features: null,
   quantiles: {},
-  state: null,
-  county: null,
   loading: false,
   error: null,
 };
@@ -21,7 +19,6 @@ export const fetchDataError = (payload) => ({ type: FETCH_DATA_ERROR, payload })
 // selectors
 export const getFeatures = (state) => state.data.features;
 export const getQuantiles = (state) => state.data.quantiles;
-export const getCountyState = (state) => ({ county: state.data.county, state: state.data.state });
 
 // reducer
 export default (state = initialState, { type, payload }) => {

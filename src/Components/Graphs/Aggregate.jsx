@@ -61,19 +61,17 @@ const CropChange = ({ aggregate, vis }) => (
   </VictoryChart>
 );
 
-const HarvestedAcres = ({ county, state, vis, aggregate }) => {
+const HarvestedAcres = ({ vis, aggregate }) => {
   const classes = styles();
   return (
     <div className={classes.root}>
-      <Typography align="center" variant="h6">{!county && !state ? 'National Totals' : `${county || state} Totals`}</Typography>
+      <Typography align="center" variant="h6">National Totals</Typography>
       <CropChange aggregate={aggregate} vis={vis} />
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  county: state.data.county,
-  state: state.data.state,
   vis: state.map.vis,
   aggregate: state.map.aggregate,
 });
