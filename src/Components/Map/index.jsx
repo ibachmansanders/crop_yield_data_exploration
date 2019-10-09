@@ -8,7 +8,7 @@ import { setMap, setInfoWindow, loadGeometry } from '../../reducers/map';
 import loadScript from '../../utils/loadScript';
 import config from '../../config';
 
-import VisScope from './VisScope';
+import Scope from './Scope';
 
 const styles = (theme) => ({
   root: {
@@ -47,7 +47,7 @@ class Map extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <VisScope />
+        <Scope />
         <div className={classes.map} id="map" />
       </div>
     );

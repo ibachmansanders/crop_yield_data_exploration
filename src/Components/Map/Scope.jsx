@@ -19,40 +19,21 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-const Vis = ({ vis, scope, updateParam }) => {
+const Vis = ({ scope, updateParam }) => {
   const classes = styles();
   return (
     <Paper className={classes.root}>
-      <FormControl component="fieldset">
-        <RadioGroup value={vis} onChange={(event, vis) => updateParam({ vis })} row>
-          <FormControlLabel
-            value="total_yield"
-            control={<Radio color="secondary" />}
-            label={<Typography variant="caption">Total Crop Yield (Bushels / Acre)</Typography>}
-          />
-          <FormControlLabel
-            value="total_harvested_acres"
-            control={<Radio color="secondary" />}
-            label={<Typography variant="caption">Total Harvested Acres</Typography>}
-          />
-          <FormControlLabel
-            value="total_production"
-            control={<Radio color="secondary" />}
-            label={<Typography variant="caption">Total Production (Bushels)</Typography>}
-          />
-        </RadioGroup>
-      </FormControl>
       <FormControl component="fieldset">
         <RadioGroup value={scope} onChange={(event, scope) => updateParam({ scope })} row>
           <FormControlLabel
             value="state"
             control={<Radio color="secondary" />}
-            label={<Typography variant="caption">Show States</Typography>}
+            label={<Typography variant="caption">SHOW STATES</Typography>}
           />
           <FormControlLabel
             value="county"
             control={<Radio color="secondary" />}
-            label={<Typography variant="caption">Show Counties</Typography>}
+            label={<Typography variant="caption">SHOW COUNTIES</Typography>}
           />
         </RadioGroup>
       </FormControl>
@@ -61,7 +42,6 @@ const Vis = ({ vis, scope, updateParam }) => {
 };
 
 const mapStateToProps = (state) => ({
-  vis: state.map.vis,
   scope: state.map.scope,
 });
 

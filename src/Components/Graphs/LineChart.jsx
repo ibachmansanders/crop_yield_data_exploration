@@ -21,7 +21,7 @@ const styles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 50,
+    padding: theme.spacing(),
     color: 'white',
     marginLeft: theme.spacing(2),
   },
@@ -40,16 +40,16 @@ const LineChart = ({ selectedData, vis }) => {
   title += ' by Year';
   return (
     <>
+      <Typography variant="h6">{title}</Typography>
       <div className={classes.legend}>
-        <Typography variant="h6">{title}</Typography>
         {selectedData.map(({ name }, index) => (
-          <div className={classes.swatch} style={{ backgroundColor: config.selectColors[index] }}>{name}</div>
+          <div key={name} className={classes.swatch} style={{ backgroundColor: config.selectColors[index] }}>{name}</div>
         ))}
         {!selectedData.length ? <Typography variant="caption" className={classes.prompt}> *Select from the map to compare</Typography> : null}
       </div>
       {selectedData.length ? (
         <VictoryChart
-          height={window.innerHeight * 0.25}
+          height={window.innerHeight * 0.2}
           padding={{ top: 12, bottom: 24, left: 50, right: 60 }}
           domainPadding={16}
           animate={{ duration: 500 }}

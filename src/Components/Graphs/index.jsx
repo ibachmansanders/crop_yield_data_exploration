@@ -1,20 +1,23 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 
+import Vis from './Vis';
 import Year from './Year';
 import Crop from './Crop';
 import Barchart from './Barchart';
 import LineChart from './LineChart';
 
 const styles = makeStyles((theme) => ({
+  root: {
+    maxHeight: '100vh',
+    overflowY: 'auto',
+  },
   paper: {
     padding: theme.spacing(3),
     width: '100%',
-    maxHeight: '100vh',
-    overflowY: 'auto',
+    marginBottom: theme.spacing(),
   },
   divider: {
     width: '100%',
@@ -23,19 +26,24 @@ const styles = makeStyles((theme) => ({
   },
 }));
 
-const Graphs = ({ vis }) => {
+const Graphs = () => {
   const classes = styles();
   return (
-    <Paper id="crop-graphs" className={classes.paper}>
-      <Crop />
-      <Year />
-      <Divider className={classes.divider} variant="fullWidth" />
-      <Barchart />
-      <LineChart />
-    </Paper>
+    <Grid container className={classes.root}>
+      <Paper className={classes.paper}>
+        <Vis />
+        <Crop />
+        <Year />
+      </Paper>
+      <Paper className={classes.paper}>
+        <LineChart />
+      </Paper>
+      <Paper className={classes.paper}>
+        <Barchart />
+      </Paper>
+    </Grid>
   );
 };
 
-const mapStateToProps = (state) => ({ vis: state.map.vis });
 
-export default connect(mapStateToProps, null)(Graphs);
+export default Graphs;

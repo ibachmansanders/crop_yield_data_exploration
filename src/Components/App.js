@@ -33,7 +33,7 @@ const App = () => (
         <Grid item xs={12} sm={7}>
           <Map />
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item xs={12} sm={5} style={{ backgroundColor: 'rgba(233, 233, 233, 0.83)' }}>
           <Graphs />
         </Grid>
       </Grid>

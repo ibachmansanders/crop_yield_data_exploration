@@ -8,9 +8,9 @@ import FormControl from '@material-ui/core/FormControl';
 import { updateParam } from '../../reducers/map';
 
 const Crop = ({ crop, updateParam }) => (
-  <FormControl component="fieldset" style={{ width: '100%' }}>
-    <Typography>Select Crop</Typography>
-    <RadioGroup value={crop} onChange={(event, crop) => updateParam({ crop })} row>
+  <FormControl component="fieldset" style={{ width: '100%', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', marginBottom: 8 }}>
+    <Typography align="center" variant="button" gutterBottom style={{ width: '100%' }}>Select Crop</Typography>
+    <RadioGroup value={crop} onChange={(event, crop) => updateParam({ crop })} row style={{ justifyContent: 'center' }}>
       <FormControlLabel
         value="CORN"
         control={<Radio color="secondary" />}
