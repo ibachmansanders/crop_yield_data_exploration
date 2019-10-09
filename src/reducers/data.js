@@ -47,7 +47,6 @@ export default (state = initialState, { type, payload }) => {
       if (selected.includes(payload)) selected.splice(selected.indexOf(payload), 1);
       // state doesn't include selected, add it
       else {
-        if (selected.length > 4) selected.shift();
         selected.push(payload);
       }
       return state;
@@ -60,7 +59,6 @@ export default (state = initialState, { type, payload }) => {
       if (dataIndex !== -1) selectedData.splice(dataIndex, 1);
       // state doesn't include selected, add it
       else {
-        if (selectedData.length > 4) selectedData.shift();
         selectedData.push(payload);
       }
       const outData = JSON.parse(JSON.stringify(selectedData));

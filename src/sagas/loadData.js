@@ -2,6 +2,7 @@ import { takeLatest, put, select } from 'redux-saga/effects';
 import qs from 'querystring';
 import { UPDATE_PARAM, getInfoWindow, getMap, getStateLayer, getCountyLayer, getParams } from '../reducers/map';
 import { LOAD_DATA, loadDataError, loadDataSuccess, updateGraphData, updateSelected } from '../reducers/data';
+import { openSnackbar } from '../reducers/feedback';
 
 import mapData from '../utils/mapData';
 
@@ -57,6 +58,11 @@ function* loadDataSaga() {
       const { feature } = event;
       // update the store's selected array by adding or removing the feature
       const id = feature.getProperty(keyProperty);
+      const { selected } = store.getState().data;
+      if (selected.length === 5) {
+        store.dispatch(openSnackbar({ type: 'warning', content: 'Maximum 5 Items selected' }));
+        return;
+      }
       store.dispatch(updateSelected(id));
     });
     // track mouseover of feature identifiers

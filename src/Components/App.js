@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 
 import Map from './Map';
 import Graphs from './Graphs';
+import Snackbar from './Snackbar';
 
 const theme = createMuiTheme({
   palette: {
@@ -27,6 +28,7 @@ const App = () => (
   <>
     <CssBaseline />
     <ThemeProvider theme={theme}>
+      <Snackbar />
       <Grid container spacing={0}>
         <Grid item xs={12} sm={7}>
           <Map />
