@@ -59,9 +59,8 @@ function* loadDataSaga() {
       // update the store's selected array by adding or removing the feature
       const id = feature.getProperty(keyProperty);
       const { selected } = store.getState().data;
-      if (selected.length === 5) {
+      if (selected.length === 5 && !selected.includes(id)) {
         store.dispatch(openSnackbar({ type: 'warning', content: 'Maximum 5 Items selected' }));
-        return;
       }
       store.dispatch(updateSelected(id));
     });

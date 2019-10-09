@@ -46,7 +46,7 @@ export default (state = initialState, { type, payload }) => {
       // state includes selected, remove it
       if (selected.includes(payload)) selected.splice(selected.indexOf(payload), 1);
       // state doesn't include selected, add it
-      else {
+      else if (selected.length < 5) {
         selected.push(payload);
       }
       return state;
