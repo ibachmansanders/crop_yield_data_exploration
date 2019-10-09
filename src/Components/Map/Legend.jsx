@@ -30,7 +30,6 @@ const styles = makeStyles((theme) => ({
 const Vis = ({ quantiles, vis }) => {
   const classes = styles();
   const { bin1, bin2, bin3, bin4, bin5 } = quantiles;
-  console.log(quantiles, vis);
   let title = 'Crop Yield (Bushels / Acre)';
   if (vis === 'total_harvested_acres') title = 'Harvested Acres';
   if (vis === 'total_production') title = 'Crop Production';
