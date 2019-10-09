@@ -52,11 +52,11 @@ router.get('/', async (req, res) => {
     // get quantiles for choropleth and bar graphs
     const [quantiles] = await db(`${table}_yields`)
       .select([
-        db.raw(`percentile_disc(0) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin1`),
-        db.raw(`percentile_disc(0.2) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin2`),
-        db.raw(`percentile_disc(0.4) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin3`),
-        db.raw(`percentile_disc(0.6) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin4`),
-        db.raw(`percentile_disc(0.8) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin5`),
+        db.raw(`percentile_disc(0.2) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin1`),
+        db.raw(`percentile_disc(0.4) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin2`),
+        db.raw(`percentile_disc(0.6) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin3`),
+        db.raw(`percentile_disc(0.8) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin4`),
+        db.raw(`percentile_disc(1) WITHIN GROUP (ORDER BY ${table}_yields.${_vis}) AS bin5`),
       ])
       .where({ crop, year })
       .catch((error) => console.log('There was an error getting quantiles: ', error));

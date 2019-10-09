@@ -9,6 +9,7 @@ import loadScript from '../../utils/loadScript';
 import config from '../../config';
 
 import Scope from './Scope';
+import Legend from './Legend';
 
 const styles = (theme) => ({
   root: {
@@ -48,6 +49,7 @@ class Map extends React.Component {
     return (
       <div className={classes.root}>
         <Scope />
+        <Legend />
         <div className={classes.map} id="map" />
       </div>
     );
