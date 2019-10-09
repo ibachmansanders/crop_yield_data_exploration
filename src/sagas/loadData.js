@@ -14,7 +14,7 @@ function* loadDataSaga() {
   if (scope === 'state') countyLayer.setStyle({ visible: false });
   try {
     // load crop data
-    const { data, quantiles, aggregate, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year, vis, scope })}`).then((data) => data.json());
+    const { data, quantiles, error } = yield fetch(`/api/yield?${qs.stringify({ crop, year, vis, scope })}`).then((data) => data.json());
     if (error) {
       console.warn(`There was an error in the server fetching the ${scope} yields: `, error);
       yield put(loadDataError(error));
@@ -36,7 +36,7 @@ function* loadDataSaga() {
 
     // store the geoJSON and data
     yield put(loadDataSuccess({ data, quantiles }));
-    yield put(updateGraphData({ barChartData, aggregate }));
+    yield put(updateGraphData({ barChartData }));
 
     // map the data
     mapData(data, scope === 'state' ? stateLayer : countyLayer, scope === 'state' ? 'state_code' : 'county_fips', vis, quantiles);

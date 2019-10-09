@@ -9,7 +9,6 @@ const initialState = {
   features: null,
   quantiles: {},
   barChartData: [{ name: '', total_yield: 0, total_harvested_acres: 0 }],
-  aggregate: [],
   loading: false,
   error: null,
 };

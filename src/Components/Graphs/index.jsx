@@ -7,7 +7,6 @@ import Divider from '@material-ui/core/Divider';
 import Year from './Year';
 import Crop from './Crop';
 import Barchart from './Barchart';
-import Aggregate from './Aggregate';
 
 const styles = makeStyles((theme) => ({
   paper: {
@@ -31,7 +30,6 @@ const Graphs = ({ vis }) => {
       <Year />
       <Divider className={classes.divider} variant="fullWidth" />
       <Barchart />
-      <Aggregate />
     </Paper>
   );
 };

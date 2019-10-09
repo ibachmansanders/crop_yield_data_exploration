@@ -61,20 +61,7 @@ router.get('/', async (req, res) => {
       .where({ crop, year })
       .catch((error) => console.log('There was an error getting quantiles: ', error));
 
-    // get aggregate of current scope
-    const aggregate = await db
-      .with('totals', (queryBuilder) => queryBuilder
-        .select('crop', 'year')
-        .from(`${table}_yields`)
-        .sum({ total_yield: 'total_yield' })
-        .sum({ total_harvested_acres: 'total_harvested_acres' })
-        .groupBy(['crop', 'year'])
-        .orderBy(['crop', 'year'])
-        .catch((error) => console.log('There was an error aggregating data: ', error)))
-      .select('crop', db.raw('jsonb_agg(totals) as years')).from('totals').groupBy('crop')
-      .catch((error) => console.log('There was an error aggregating: ', error));
-
-    res.status(200).json({ data, quantiles, aggregate });
+    res.status(200).json({ data, quantiles });
   } catch (error) {
     console.error('There was a server error getting yields: ', error);
     res.status(500).json({ error });
