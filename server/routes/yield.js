@@ -68,4 +68,56 @@ router.get('/', async (req, res) => {
   }
 });
 
+// request yield and geometry data
+router.get('/:id', async (req, res) => {
+  try {
+    const { crop, vis, scope } = req.query;
+    const { id } = req.params;
+
+    // load yield data depending on scope
+    let data = [];
+
+    if (scope === 'state') {
+      data = await db('state_yields')
+        .select('year', 'state_code', 'total_harvested_acres', 'total_yield', 'total_production')
+        .where({ crop })
+        .andWhere('state_code', id)
+        .orderBy('year')
+        // convert data to object for graphing
+        .then((results) => results.reduce((acc, row) => {
+          if (!acc.name) acc.name = row.state_code;
+          if (!acc.id) acc.id = row.state_code;
+          acc.data.push({ x: row.year, y: row[vis] });
+          return acc;
+        }, { name: null, id: null, data: [] }))
+        .catch((error) => {
+          console.log(`There was an error loading ${id} state data: `, error);
+          res.status(500).json({ error });
+        });
+    } else if (scope === 'county') {
+      data = await db('county_yields')
+        .select('year', 'county_fips', 'county_name', 'total_harvested_acres', 'total_yield', 'total_production')
+        .where({ crop })
+        .andWhere('county_fips', id)
+        .orderBy('year')
+        // convert data to object for graphing
+        .then((results) => results.reduce((acc, row) => {
+          if (!acc.name) acc.name = row.county_name;
+          if (!acc.id) acc.id = row.county_fips;
+          acc.data.push({ x: row.year, y: row[vis] });
+          return acc;
+        }, { name: null, id: null, data: [] }))
+        .catch((error) => {
+          console.log(`There was an error loading ${id} county data: `, error);
+          res.status(500).json({ error });
+        });
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('There was a server error getting yields: ', error);
+    res.status(500).json({ error });
+  }
+});
+
 module.exports = router;

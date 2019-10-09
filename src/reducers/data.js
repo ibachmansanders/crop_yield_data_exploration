@@ -4,6 +4,7 @@ export const LOAD_DATA_SUCCESS = 'LOAD_DATA_SUCCESS';
 export const LOAD_DATA_ERROR = 'LOAD_DATA_ERROR';
 export const UPDATE_GRAPH_DATA = 'UPDATE_GRAPH_DATA';
 export const UPDATE_SELECTED = 'UPDATE_SELECTED';
+export const UPDATE_SELECTED_DATA = 'UPDATE_SELECTED_DATA';
 
 // initial state
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   barChartData: [{ name: '', total_yield: 0, total_harvested_acres: 0 }],
   mouseOver: null,
   selected: [],
+  selectedData: [{ name: 'cat' }],
   loading: false,
   error: null,
 };
@@ -22,6 +24,7 @@ export const loadDataSuccess = (payload) => ({ type: LOAD_DATA_SUCCESS, payload 
 export const loadDataError = (payload) => ({ type: LOAD_DATA_ERROR, payload });
 export const updateGraphData = (payload) => ({ type: UPDATE_GRAPH_DATA, payload });
 export const updateSelected = (payload) => ({ type: UPDATE_SELECTED, payload });
+export const updateSelectedData = (payload) => ({ type: UPDATE_SELECTED_DATA, payload });
 
 // selectors
 export const getFeatures = (state) => state.data.features;
@@ -48,6 +51,20 @@ export default (state = initialState, { type, payload }) => {
         selected.push(payload);
       }
       return state;
+    }
+    case UPDATE_SELECTED_DATA: {
+      const { selectedData } = state;
+      const { id } = payload;
+      const dataIndex = selectedData.findIndex((data) => data.id === id);
+      // state includes selected data, remove it
+      if (dataIndex !== -1) selectedData.splice(dataIndex, 1);
+      // state doesn't include selected, add it
+      else {
+        if (selectedData.length > 4) selectedData.shift();
+        selectedData.push(payload);
+      }
+      const outData = JSON.parse(JSON.stringify(selectedData));
+      return { ...state, selectedData: outData };
     }
     default:
       return state;
