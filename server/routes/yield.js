@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     // loading states
     let innerSelect = `
       state_geometry.region, state_geometry.state_code, state_geometry.state_name, state_geometry.land_area,
-      state_yields.total_harvested_acres, state_yields.total_yield
+      state_yields.total_harvested_acres, state_yields.total_yield, state_yields.total_production
     `;
     let table = 'state';
     let join = 'state_yields ON state_yields.state_code = state_geometry.state_code';
@@ -20,13 +20,14 @@ router.get('/', async (req, res) => {
     let _vis;
     if (vis === 'total_harvested_acres') _vis = 'total_harvested_acres';
     if (vis === 'total_yield') _vis = 'total_yield';
+    if (vis === 'total_production') _vis = 'total_production';
 
     // loading counties
     if (scope === 'county') {
       innerSelect = `
         county_geometry.county_fips, county_geometry.land_area,
         county_yields.county_name, county_yields.state_code,
-        county_yields.total_harvested_acres, county_yields.total_yield
+        county_yields.total_harvested_acres, county_yields.total_yield, county_yields.total_production
       `;
       table = 'county';
       join = 'county_yields ON county_yields.county_fips = county_geometry.county_fips';

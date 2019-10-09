@@ -28,12 +28,17 @@ const Vis = ({ vis, scope, updateParam }) => {
           <FormControlLabel
             value="total_yield"
             control={<Radio color="secondary" />}
-            label={<Typography variant="caption">Total Crop Yield</Typography>}
+            label={<Typography variant="caption">Total Crop Yield (Bushels / Acre)</Typography>}
           />
           <FormControlLabel
             value="total_harvested_acres"
             control={<Radio color="secondary" />}
             label={<Typography variant="caption">Total Harvested Acres</Typography>}
+          />
+          <FormControlLabel
+            value="total_production"
+            control={<Radio color="secondary" />}
+            label={<Typography variant="caption">Total Production (Bushels)</Typography>}
           />
         </RadioGroup>
       </FormControl>

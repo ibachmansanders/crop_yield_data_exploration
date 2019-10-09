@@ -19,7 +19,10 @@ const Barchart = ({ data, x, y, quantiles }) => {
     >
       <VictoryAxis
         dependentAxis
-        tickFormat={(x) => (`${x * 0.001}k`)}
+        tickFormat={(x) => {
+          if (y === 'total_yield') return x;
+          return `${x * 0.001}k`;
+        }}
         style={{
           tickLabels: { fontSize: 12, fontFamily: 'sans-serif' },
         }}
