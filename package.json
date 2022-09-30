@@ -20,7 +20,7 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",
-    "victory": "^33.1.0"
+    "victory": "^36.6.8"
   },
   "scripts": {
     "watch": "react-scripts start",
